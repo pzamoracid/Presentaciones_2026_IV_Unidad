@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>III Unidad | Centro de Presentaciones</title>
+<style>
+:root{
+ --bg:#030b18;--panel:#071a31;--panel2:#0a2340;--cyan:#00eaff;
+ --yellow:#ffe500;--text:#effaff;--muted:#9db7ca;--line:#134564;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:var(--text);
+ background:
+ radial-gradient(circle at 15% 20%,#00d9ff18 0 2px,transparent 3px),
+ radial-gradient(circle at 80% 30%,#00eaff12 0 2px,transparent 3px),
+ linear-gradient(135deg,#020815,#061c34 50%,#020916);
+ background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
+ background-image:linear-gradient(90deg,transparent 49%,#00eaff 50%,transparent 51%),
+ linear-gradient(0deg,transparent 49%,#00eaff 50%,transparent 51%);
+ background-size:120px 120px}
+header{position:relative;padding:42px 20px 30px;text-align:center;border-bottom:1px solid #0c4668;
+ background:linear-gradient(180deg,#061d38dd,#061327cc);box-shadow:0 0 35px #00eaff18}
+.logo{font-size:52px;filter:drop-shadow(0 0 12px #00eaff)}
+h1{margin:8px 0 4px;font-size:clamp(28px,5vw,48px);letter-spacing:2px;color:var(--yellow);
+ text-shadow:0 0 14px #ffe50044}
+.subtitle{color:var(--cyan);font-weight:bold;letter-spacing:3px}
+main{position:relative;max-width:1250px;margin:25px auto;padding:0 18px}
+.panel{background:linear-gradient(145deg,#071a31ee,#0a2038ee);border:1px solid var(--line);
+ border-radius:18px;padding:20px;box-shadow:0 10px 35px #0008,0 0 25px #00eaff0c;margin-bottom:18px}
+.panel-title{display:flex;align-items:center;gap:10px;margin:0 0 15px;color:#fff}
+.day-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+button{font:inherit;cursor:pointer;border:1px solid #1c5975;background:#0a2844;color:#dff8ff;
+ border-radius:12px;padding:14px 10px;font-weight:bold;transition:.2s}
+button:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 0 18px #00eaff25}
+button.active{background:var(--yellow);color:#06162b;border-color:var(--yellow);box-shadow:0 0 20px #ffe50055}
+.time-buttons{display:flex;flex-wrap:wrap;gap:9px}
+.time-buttons button{padding:10px 13px;font-size:14px}
+.schedule{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}
+.card{position:relative;overflow:hidden;background:linear-gradient(145deg,#0a2340,#061a31);
+ border:1px solid #165274;border-radius:16px;padding:19px;min-height:185px;
+ box-shadow:0 8px 25px #0007;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:0 10px 30px #00eaff1e}
+.card .glow{position:absolute;width:120px;height:120px;border-radius:50%;right:-45px;top:-45px;
+ background:#00eaff16;filter:blur(5px)}
+.icon{font-size:35px}.time{color:var(--yellow);font-weight:bold;font-size:14px;letter-spacing:1px}
+.title{font-size:20px;font-weight:bold;margin:10px 0 7px}.meta{color:var(--muted);font-size:13px;min-height:34px}
+.open{display:inline-block;margin-top:15px;text-decoration:none;background:var(--yellow);color:#06162b;
+ font-weight:bold;padding:10px 14px;border-radius:9px;box-shadow:0 0 15px #ffe50020}
+.empty{text-align:center;color:var(--muted);padding:40px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.badge{border:1px solid #1c5975;padding:5px 9px;border-radius:20px}
+footer{text-align:center;padding:30px;color:#7795aa;font-size:13px}
+@media(max-width:800px){.day-buttons{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">⌘</div>
+ <h1>III UNIDAD</h1>
+ <div class="subtitle">CENTRO DE PRESENTACIONES DOCENTES · 2026</div>
+</header>
+<main>
+<section class="panel">
+ <h2 class="panel-title">📅 1. Selecciona el día</h2>
+ <div class="day-buttons" id="days"></div>
+</section>
+<section class="panel">
+ <h2 class="panel-title">⏱️ 2. Selecciona la hora</h2>
+ <div class="time-buttons" id="times"></div>
+</section>
+<section class="panel">
+ <h2 class="panel-title" id="sectionTitle">📚 3. Clases del día</h2>
+ <div class="legend">
+  <span class="badge">💻 Computación</span><span class="badge">🤖 Robótica</span>
+  <span class="badge">🎨 Diseño</span><span class="badge">🧪 Laboratorio</span>
+  <span class="badge">🎬 Contenido Digital</span>
+ </div>
+</section>
+<section id="schedule" class="schedule"></section>
+</main>
+<footer>III Unidad · Horario docente · Presentaciones HTML</footer>
+<script>
+const classes = [
+{day:"LUNES",time:"07-00_07-40",start:"07:00",end:"07:40",folder:"3ro_Compu",
+icon:"💻",title:"3ro. Computación",href:"III_UNIDAD/LUNES/07-00_07-40/3ro_Compu/index.html"},
+{day:"LUNES",time:"07-40_08-20",start:"07:40",end:"08:20",folder:"1ro_Compu",
+icon:"💻",title:"1ro. Computación",href:"III_UNIDAD/LUNES/07-40_08-20/1ro_Compu/index.html"},
+{day:"LUNES",time:"08-20_09-00",start:"08:20",end:"09:00",folder:"Laboratorio_I",
+icon:"🧪",title:"Laboratorio I",href:"III_UNIDAD/LUNES/08-20_09-00/Laboratorio_I/index.html"},
+{day:"LUNES",time:"09-00_09-40",start:"09:00",end:"09:40",folder:"Produccion_Contenido_Digital",
+icon:"🎬",title:"Producción de Contenido Digital",href:"III_UNIDAD/LUNES/09-00_09-40/Produccion_Contenido_Digital/index.html"},
+{day:"LUNES",time:"10-10_10-50",start:"10:10",end:"10:50",folder:"2do_Compu",
+icon:"💻",title:"2do. Computación",href:"III_UNIDAD/LUNES/10-10_10-50/2do_Compu/index.html"},
+{day:"LUNES",time:"10-50_11-25",start:"10:50",end:"11:25",folder:"Reparacion",
+icon:"🛠️",title:"Reparación",href:"III_UNIDAD/LUNES/10-50_11-25/Reparacion/index.html"},
+{day:"MARTES",time:"07-00_07-40",start:"07:00",end:"07:40",folder:"Diseno_Compu_I",
+icon:"🎨",title:"Diseño Compu I",href:"III_UNIDAD/MARTES/07-00_07-40/Diseno_Compu_I/index.html"},
+{day:"MARTES",time:"07-40_08-20",start:"07:40",end:"08:20",folder:"Prepa_Compu",
+icon:"🖥️",title:"Prepa. Computación",href:"III_UNIDAD/MARTES/07-40_08-20/Prepa_Compu/index.html"},
+{day:"MARTES",time:"08-20_09-00",start:"08:20",end:"09:00",folder:"Compu_Aplicada",
+icon:"💻",title:"Computación Aplicada",href:"III_UNIDAD/MARTES/08-20_09-00/Compu_Aplicada/index.html"},
+{day:"MARTES",time:"09-00_09-40",start:"09:00",end:"09:40",folder:"1ro_2do_3ro_Primaria_Compu",
+icon:"🧒",title:"1ro., 2do., 3ro. Primaria - Compu",href:"III_UNIDAD/MARTES/09-00_09-40/1ro_2do_3ro_Primaria_Compu/index.html"},
+{day:"MARTES",time:"10-10_10-50",start:"10:10",end:"10:50",folder:"4to_5to_6to_Primaria_Compu",
+icon:"🧒",title:"4to., 5to., 6to. Primaria - Compu",href:"III_UNIDAD/MARTES/10-10_10-50/4to_5to_6to_Primaria_Compu/index.html"},
+{day:"MARTES",time:"10-50_11-25",start:"10:50",end:"11:25",folder:"Laboratorio_I",
+icon:"🧪",title:"Laboratorio I",href:"III_UNIDAD/MARTES/10-50_11-25/Laboratorio_I/index.html"},
+{day:"MIERCOLES",time:"07-00_07-40",start:"07:00",end:"07:40",folder:"2do_Robotica",
+icon:"🤖",title:"2do. Robótica",href:"III_UNIDAD/MIERCOLES/07-00_07-40/2do_Robotica/index.html"},
+{day:"MIERCOLES",time:"07-40_08-20",start:"07:40",end:"08:20",folder:"4to_Baco_Robotica",
+icon:"🤖",title:"4to. Baco - Robótica",href:"III_UNIDAD/MIERCOLES/07-40_08-20/4to_Baco_Robotica/index.html"},
+{day:"MIERCOLES",time:"08-20_09-00",start:"08:20",end:"09:00",folder:"5to_Baco_Robotica",
+icon:"🤖",title:"5to. Baco - Robótica",href:"III_UNIDAD/MIERCOLES/08-20_09-00/5to_Baco_Robotica/index.html"},
+{day:"MIERCOLES",time:"09-00_09-40",start:"09:00",end:"09:40",folder:"1ro_Robotica",
+icon:"🤖",title:"1ro. Robótica",href:"III_UNIDAD/MIERCOLES/09-00_09-40/1ro_Robotica/index.html"},
+{day:"MIERCOLES",time:"10-10_10-50",start:"10:10",end:"10:50",folder:"3ro_Robotica",
+icon:"🤖",title:"3ro. Robótica",href:"III_UNIDAD/MIERCOLES/10-10_10-50/3ro_Robotica/index.html"},
+{day:"MIERCOLES",time:"10-50_11-25",start:"10:50",end:"11:25",folder:"Diseno_Compu_II",
+icon:"🎨",title:"Diseño Compu II",href:"III_UNIDAD/MIERCOLES/10-50_11-25/Diseno_Compu_II/index.html"},
+{day:"JUEVES",time:"07-00_07-40",start:"07:00",end:"07:40",folder:"Diseno_Compu_I",
+icon:"🎨",title:"Diseño Compu I",href:"III_UNIDAD/JUEVES/07-00_07-40/Diseno_Compu_I/index.html"},
+{day:"JUEVES",time:"07-40_08-20",start:"07:40",end:"08:20",folder:"Prepa_Robotica",
+icon:"🤖",title:"Prepa. Robótica",href:"III_UNIDAD/JUEVES/07-40_08-20/Prepa_Robotica/index.html"},
+{day:"JUEVES",time:"08-20_09-00",start:"08:20",end:"09:00",folder:"Compu_Aplicada",
+icon:"💻",title:"Computación Aplicada",href:"III_UNIDAD/JUEVES/08-20_09-00/Compu_Aplicada/index.html"},
+{day:"JUEVES",time:"09-00_09-40",start:"09:00",end:"09:40",folder:"1ro_2do_3ro_Primaria_Robotica",
+icon:"🤖",title:"1ro., 2do., 3ro. Primaria - Robótica",href:"III_UNIDAD/JUEVES/09-00_09-40/1ro_2do_3ro_Primaria_Robotica/index.html"},
+{day:"JUEVES",time:"10-10_10-50",start:"10:10",end:"10:50",folder:"4to_5to_6to_Primaria_Robotica",
+icon:"🤖",title:"4to., 5to., 6to. Primaria - Robótica",href:"III_UNIDAD/JUEVES/10-10_10-50/4to_5to_6to_Primaria_Robotica/index.html"},
+{day:"JUEVES",time:"10-50_11-25",start:"10:50",end:"11:25",folder:"Laboratorio_I",
+icon:"🧪",title:"Laboratorio I",href:"III_UNIDAD/JUEVES/10-50_11-25/Laboratorio_I/index.html"},
+{day:"VIERNES",time:"07-00_07-40",start:"07:00",end:"07:40",folder:"3ro_Compu",
+icon:"💻",title:"3ro. Computación",href:"III_UNIDAD/VIERNES/07-00_07-40/3ro_Compu/index.html"},
+{day:"VIERNES",time:"07-40_08-20",start:"07:40",end:"08:20",folder:"1ro_Compu",
+icon:"💻",title:"1ro. Computación",href:"III_UNIDAD/VIERNES/07-40_08-20/1ro_Compu/index.html"},
+{day:"VIERNES",time:"08-20_09-00",start:"08:20",end:"09:00",folder:"Laboratorio_I",
+icon:"🧪",title:"Laboratorio I",href:"III_UNIDAD/VIERNES/08-20_09-00/Laboratorio_I/index.html"},
+{day:"VIERNES",time:"09-00_09-40",start:"09:00",end:"09:40",folder:"Produccion_Contenido_Digital",
+icon:"🎬",title:"Producción de Contenido Digital",href:"III_UNIDAD/VIERNES/09-00_09-40/Produccion_Contenido_Digital/index.html"},
+{day:"VIERNES",time:"10-10_10-50",start:"10:10",end:"10:50",folder:"2do_Compu",
+icon:"💻",title:"2do. Computación",href:"III_UNIDAD/VIERNES/10-10_10-50/2do_Compu/index.html"},
+{day:"VIERNES",time:"10-50_11-25",start:"10:50",end:"11:25",folder:"Reparacion",
+icon:"🛠️",title:"Reparación",href:"III_UNIDAD/VIERNES/10-50_11-25/Reparacion/index.html"}
+];
+const dayNames={LUNES:"Lunes",MARTES:"Martes",MIERCOLES:"Miércoles",JUEVES:"Jueves",VIERNES:"Viernes"};
+const dayOrder=["LUNES","MARTES","MIERCOLES","JUEVES","VIERNES"];
+let selectedDay="LUNES", selectedTime="TODAS";
+const daysEl=document.getElementById("days"), timesEl=document.getElementById("times"), scheduleEl=document.getElementById("schedule");
+function renderDays(){
+ daysEl.innerHTML=dayOrder.map(d=>`<button class="${d===selectedDay?'active':''}" onclick="setDay('${d}')">${dayNames[d]}</button>`).join("");
+}
+function renderTimes(){
+ const list=classes.filter(c=>c.day===selectedDay);
+ const times=[...new Map(list.map(c=>[c.time,`${c.start} - ${c.end}`]))];
+ timesEl.innerHTML=`<button class="${selectedTime==='TODAS'?'active':''}" onclick="setTime('TODAS')">TODAS</button>`+
+ times.map(([t,label])=>`<button class="${t===selectedTime?'active':''}" onclick="setTime('${t}')">${label}</button>`).join("");
+}
+function renderCards(){
+ let list=classes.filter(c=>c.day===selectedDay && (selectedTime==='TODAS'||c.time===selectedTime));
+ document.getElementById("sectionTitle").textContent=`📚 ${dayNames[selectedDay]} · ${selectedTime==='TODAS'?'Todas las clases':list[0]?.start+' - '+list[0]?.end}`;
+ scheduleEl.innerHTML=list.length?list.map(c=>`
+ <article class="card"><div class="glow"></div><div class="icon">${c.icon}</div>
+ <div class="time">${c.start} - ${c.end}</div><div class="title">${c.title}</div>
+ <div class="meta">III Unidad · ${dayNames[c.day]}</div>
+ <a class="open" href="${c.href}">▶ Abrir clase</a></article>`).join(""):`<div class="empty">No hay una clase en ese horario.</div>`;
+}
+function setDay(d){selectedDay=d;selectedTime="TODAS";renderAll()}
+function setTime(t){selectedTime=t;renderTimes();renderCards()}
+function renderAll(){renderDays();renderTimes();renderCards()}
+renderAll();
+</script>
+</body>
+</html>

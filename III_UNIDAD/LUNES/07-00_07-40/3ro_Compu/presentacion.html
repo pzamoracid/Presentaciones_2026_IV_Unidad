@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicación y Moderación Ética de Contenidos Digitales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        .presentation-deck {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            margin: 0 auto;
+        }
+
+        .slide-container {
+            align-items: flex-start;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+            display: none;
+            flex-direction: column;
+            height: 720px;
+            justify-content: flex-start;
+            overflow: hidden;
+            padding: 50px 60px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            z-index: 1;
+        }
+
+        .slide-container.active {
+            display: flex;
+            z-index: 2;
+        }
+
+        /* Ambient Background Grid Pattern */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .slide-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .slide-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-main);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+            padding-bottom: 12px;
+        }
+
+        .slide-title i {
+            color: var(--accent-cyan);
+            font-size: 28px;
+        }
+
+        p, li {
+            color: var(--text-muted);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .content-area {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Title Slide Layout */
+        .title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .title-badge {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: var(--accent-cyan);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-layout h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.15;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            max-width: 1080px;
+        }
+
+        .title-layout .subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 900px;
+            line-height: 1.5;
+        }
+
+        /* Section Header Layout */
+        .section-title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .section-title-layout h2 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .section-title-layout p {
+            font-size: 21px;
+            color: var(--accent-cyan);
+            max-width: 880px;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            margin: 25px 0;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .tiled-content {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .tile {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 28px 24px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .tile:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .tile .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .tile h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .tile p {
+            font-size: 15px;
+            line-height: 1.55;
+        }
+
+        /* Custom Case Tile Styling */
+        .case-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .case-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .case-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .case-action-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-approve {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: var(--accent-emerald);
+        }
+
+        .badge-delete {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            color: var(--accent-rose);
+        }
+
+        .badge-spam {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: var(--accent-amber);
+        }
+
+        .case-quote {
+            font-style: italic;
+            color: var(--text-main);
+            background: rgba(30, 41, 59, 0.5);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-blue);
+            font-size: 15px;
+        }
+
+        .case-result {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .styled-bullets {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .styled-bullets li {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--accent-blue);
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .styled-bullets li i {
+            color: var(--accent-cyan);
+            font-size: 18px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        /* Technical Step Card Layout */
+        .step-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .step-card h3 {
+            font-size: 18px;
+            color: var(--accent-cyan);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-card p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Metric & Rubric Card */
+        .metric-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .metric-number {
+            font-size: 90px;
+            font-weight: 800;
+            line-height: 1;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .deck-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 1280px;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .counter-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-muted);
+            background: rgba(30, 41, 59, 0.5);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        /* Teacher Notes Panel */
+        .teacher-notes-panel {
+            width: 1280px;
+            margin-top: 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .teacher-notes-panel i {
+            color: var(--accent-cyan);
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .teacher-notes-content {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .teacher-notes-label {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            margin-bottom: 3px;
+        }
+
+        /* Image Sources Card */
+        .source-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .source-card img {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .source-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .source-info a {
+            color: var(--accent-cyan);
+            word-break: break-all;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .source-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-deck">
+
+    <div class="slide-container active" id="slide1">
+        <div class="title-layout">
+            <div class="title-badge"><i class="fa-solid fa-graduation-cap"></i> Colegio de Informática "Justo Rufino Bautista"</div>
+            <h1>Publicación y Moderación Ética de Contenidos Digitales</h1>
+            <p class="subtitle">Difusión formal de campañas audiovisuales en blogs educativos y gestión responsable de la retroalimentación comunitaria.</p>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide2">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-bullseye"></i> Unidad III • Apoyo Docente</div>
+            <h2>Indicador de Logro (CNB Guatemala)</h2>
+            <div class="section-divider"></div>
+            <p>"Promueve la convivencia armónica y el respeto mutuo en entornos virtuales mediante la publicación formal de campañas audiovisuales en plataformas controladas (blogs educativos) y la gestión ética, asertiva e informada de la retroalimentación y moderación de comentarios."</p>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide3">
+        <h2 class="slide-title"><i class="fa-solid fa-lightbulb"></i> Sección 1: Activación de Conocimientos</h2>
+        <div class="content-area">
+            <div class="tiled-content">
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3>Responsabilidad del Publicador</h3>
+                    <p>Publicar en internet implica asumir la autoría y el impacto del mensaje. La ética exige veracidad, respeto y moderación proactiva.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-comments"></i></div>
+                    <h3>Crítica vs. Trolling</h3>
+                    <p>La crítica constructiva aporta argumentos de mejora. El trolling busca desacreditar u ofender sin sustento académico.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-shoe-prints"></i></div>
+                    <h3>Huella Digital Positiva</h3>
+                    <p>Cada publicación, comentario y respuesta construye el prestigio digital e identidad académica del estudiante.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide4">
+        <h2 class="slide-title"><i class="fa-solid fa-laptop-code"></i> Sección 2: Taller Práctico de Laboratorio</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div class="tile" style="border-left: 4px solid var(--accent-blue);">
+                    <div class="icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <h3>LUNES: Publicación e Incrustación</h3>
+                    <ul class="styled-bullets" style="margin-top: 10px;">
+                        <li><i class="fa-solid fa-check"></i> Configuración del post en Blogger o Google Sites con título y descripción.</li>
+                        <li><i class="fa-solid fa-code"></i> Incrustación técnica de la campaña audiovisual mediante código &lt;iframe&gt;.</li>
+                        <li><i class="fa-solid fa-lock"></i> Verificación de permisos de privacidad y correcta reproducción en la plataforma.</li>
+                    </ul>
+                </div>
+                <div class="tile" style="border-left: 4px solid var(--accent-cyan);">
+                    <div class="icon"><i class="fa-solid fa-users-gear"></i></div>
+                    <h3>VIERNES: Moderación y Feedback</h3>
+                    <ul class="styled-bullets" style="margin-top: 10px;">
+                        <li><i class="fa-solid fa-comments"></i> Dinámica de coevaluación y feedback cruzado entre parejas de estudiantes.</li>
+                        <li><i class="fa-solid fa-heart"></i> Emisión de comentarios constructivos siguiendo los estándares de Netiqueta.</li>
+                        <li><i class="fa-solid fa-shield-halved"></i> Aplicación del protocolo de moderación y aprobación de comentarios en vivo.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title"><i class="fa-solid fa-code"></i> Pasos Técnicos: Incrustar Video (Embed / Iframe)</h2>
+        <div class="content-area">
+            <div class="step-card">
+                <h3><i class="fa-solid fa-share-nodes"></i> 1. Obtener Código de Incrustación</h3>
+                <p>En YouTube o Google Drive, seleccionar <strong>"Compartir" &gt; "Incrustar"</strong> y copiar el código HTML generado (etiqueta &lt;iframe&gt;).</p>
+            </div>
+            <div class="step-card">
+                <h3><i class="fa-solid fa-code"></i> 2. Modo HTML en el Editor</h3>
+                <p>Cambiar la vista del editor de entrada de Blogger o Google Sites de <strong>"Redactar"</strong> a <strong>"Vista HTML"</strong>.</p>
+            </div>
+            <div class="step-card">
+                <h3><i class="fa-solid fa-file-lines"></i> 3. Publicación Estructurada</h3>
+                <p>Pegar el código dentro del contenedor HTML, agregar una introducción formal, justificación del tema y guardar los cambios.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide6">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-shield-cat"></i> Moderación Virtual</div>
+            <h2>Sección 3: Protocolo de Moderación Ética</h2>
+            <div class="section-divider"></div>
+            <p>Estrategias y criterios para la gestión responsable de comentarios y control de crisis en plataformas digitales.</p>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide7">
+        <h2 class="slide-title"><i class="fa-solid fa-scale-balanced"></i> Análisis de Casos: Clasificación de Comentarios</h2>
+        <div class="content-area">
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-title" style="color: var(--accent-emerald);">
+                        <i class="fa-solid fa-circle-check"></i> Comentario A: Aceptable
+                    </div>
+                    <span class="case-action-badge badge-approve">Aprobar y Responder</span>
+                </div>
+                <div class="case-quote">"Excelente video, aunque el audio se escucha bajo en el minuto 1:20."</div>
+                <div class="case-result"><strong>Acción:</strong> APROBAR y responder agradeciendo el valioso aporte técnico de mejora.</div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-title" style="color: var(--accent-rose);">
+                        <i class="fa-solid fa-circle-xmark"></i> Comentario B: Inaceptable
+                    </div>
+                    <span class="case-action-badge badge-delete">Ocultar / Eliminar</span>
+                </div>
+                <div class="case-quote">"Qué proyecto tan malo, borren esto, no sirven para nada."</div>
+                <div class="case-result"><strong>Acción:</strong> OCULTAR / ELIMINAR por violentar la convivencia armónica sin aportar valor académico.</div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-title" style="color: var(--accent-amber);">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Comentario C: Dudoso / Spam
+                    </div>
+                    <span class="case-action-badge badge-spam">Rechazar / Marcar Spam</span>
+                </div>
+                <div class="case-quote">"Gana dinero fácil entrando a este enlace: http://..."</div>
+                <div class="case-result"><strong>Acción:</strong> RECHAZAR / MARCAR SPAM para proteger la seguridad digital de la comunidad.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title"><i class="fa-solid fa-filter"></i> Criterios de Moderación y Filtros Antispam</h2>
+        <div class="content-area">
+            <div class="tiled-content">
+                <div class="tile" style="border-top: 4px solid var(--accent-blue);">
+                    <div class="icon"><i class="fa-solid fa-eye"></i></div>
+                    <h3>Aprobación Previa</h3>
+                    <p>Configurar el blog para que todo comentario requiera revisión obligatoria del administrador antes de hacerse público.</p>
+                </div>
+                <div class="tile" style="border-top: 4px solid var(--accent-purple);">
+                    <div class="icon"><i class="fa-solid fa-key"></i></div>
+                    <h3>Filtro de Palabras Clave</h3>
+                    <p>Bloquear automáticamente términos despectivos, insultos u hipervínculos externos sospechosos en la caja de comentarios.</p>
+                </div>
+                <div class="tile" style="border-top: 4px solid var(--accent-rose);">
+                    <div class="icon"><i class="fa-solid fa-building-flag"></i></div>
+                    <h3>Escalamiento Institucional</h3>
+                    <p>En caso de amenazas o ciberacoso persistente, reportar inmediatamente a la coordinación y comisión de disciplina del colegio.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide9">
+        <h2 class="slide-title"><i class="fa-solid fa-scale-unbalanced-flip"></i> Sección 4: Ética y Libertad de Expresión</h2>
+        <div class="content-area">
+            <div class="two-column" style="grid-template-columns: 1fr 1fr;">
+                <div class="tile" style="justify-content: center; background: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--accent-purple);">
+                    <div class="icon" style="color: var(--accent-purple);"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <h3>Comunidades Saludables</h3>
+                    <p style="font-size: 17px; line-height: 1.6; margin-top: 10px;">Construir entornos virtuales armónicos requiere empatía, asertividad y la responsabilidad compartida de velar por el respeto mutuo.</p>
+                </div>
+                <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); border-radius: 14px; padding: 35px; display: flex; flex-direction: column; justify-content: center; text-align: center; position: relative;">
+                    <i class="fa-solid fa-quote-left" style="font-size: 36px; color: rgba(59, 130, 246, 0.3); position: absolute; top: 20px; left: 20px;"></i>
+                    <p style="font-size: 21px; font-weight: 600; color: #f1f5f9; font-style: italic; line-height: 1.5; z-index: 1;">
+                        "La libertad de expresión es un derecho fundamental en los entornos virtuales, pero finaliza en el momento exacto en que se vulnera la dignidad, integridad o reputación del otro."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide10">
+        <h2 class="slide-title"><i class="fa-solid fa-clipboard-check"></i> Ponderación y Rúbrica (10 Puntos)</h2>
+        <div class="content-area">
+            <div class="two-column" style="grid-template-columns: 0.8fr 1.2fr;">
+                <div class="metric-card">
+                    <div class="metric-number">10</div>
+                    <div class="metric-label">Puntos Totales</div>
+                </div>
+                <div>
+                    <ul class="styled-bullets">
+                        <li>
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <div>
+                                <strong>Publicación e Incrustación (4 pts):</strong> Correcta incrustación HTML del video, título formal e introducción descriptiva.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-comments"></i>
+                            <div>
+                                <strong>Participación y Feedback (3 pts):</strong> Emisión de comentarios constructivos con netiqueta en blogs de compañeros.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <div>
+                                <strong>Moderación y Reflexión (3 pts):</strong> Gestión correcta de comentarios recibidos y resolución de casos éticos.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide11">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-circle-question"></i> Sesión Abierta</div>
+            <h2>¿Preguntas o Comentarios?</h2>
+            <div class="section-divider"></div>
+            <p>Abre la plataforma de tu blog y comencemos la actividad de publicación y moderación.</p>
+            <div style="margin-top:40px; color:var(--text-dim); font-size:18px; font-weight:600;">
+                Colegio de Informática "Justo Rufino Bautista" | Ciclo Escolar 2026
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide12">
+        <h2 class="slide-title"><i class="fa-solid fa-images"></i> Image Sources / Recursos Visuales</h2>
+        <div class="content-area" style="gap: 20px;">
+            <div class="source-card">
+                <img src="https://cf-images.assettype.com/theleaflet%2Fimport%2Fwp-content%2Fuploads%2F2022%2F07%2FSocial-media-free-speech.png?w=480&auto=format%2Ccompress&fit=max" alt="Freedom of Speech" onerror="this.src='https://placehold.co/120x80/1e293b/3b82f6?text=Free+Speech'">
+                <div class="source-info">
+                    <strong>Recurso 1: Libertad de Expresión en Redes Sociales</strong>
+                    <a href="https://cf-images.assettype.com/theleaflet%2Fimport%2Fwp-content%2Fuploads%2F2022%2F07%2FSocial-media-free-speech.png?w=480&auto=format%2Ccompress&fit=max" target="_blank">Ver Imagen Fuente</a>
+                    <span style="font-size: 13px; color: var(--text-dim);">Fuente: theleaflet.in</span>
+                </div>
+            </div>
+
+            <div class="source-card">
+                <img src="https://brentmischnick.com/wp-content/uploads/2019/09/digital-footprint-image.png?w=859" alt="Digital Footprint" onerror="this.src='https://placehold.co/120x80/1e293b/06b6d4?text=Huella+Digital'">
+                <div class="source-info">
+                    <strong>Recurso 2: Identidad y Huella Digital</strong>
+                    <a href="https://brentmischnick.com/wp-content/uploads/2019/09/digital-footprint-image.png?w=859" target="_blank">Ver Imagen Fuente</a>
+                    <span style="font-size: 13px; color: var(--text-dim);">Fuente: brentmischnick.com</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="deck-controls">
+    <button class="nav-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+    <div class="counter-badge" id="slideCounter">Diapositiva 1 / 12</div>
+    <div style="display:flex; gap:10px;">
+        <button class="nav-btn" id="fullscreenBtn"><i class="fa-solid fa-expand"></i> Pantalla Completa</button>
+        <button class="nav-btn" id="nextBtn">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<div class="teacher-notes-panel">
+    <i class="fa-solid fa-note-sticky"></i>
+    <div>
+        <div class="teacher-notes-label">Notas del Docente</div>
+        <div class="teacher-notes-content" id="teacherNotesText">
+            Bienvenida e introducción al tema de publicación y moderación ética de contenidos digitales.
+        </div>
+    </div>
+</div>
+
+<script>
+    const teacherNotes = [
+        "Bienvenida e introducción al tema de publicación y moderación ética de contenidos digitales.",
+        "Lectura guiada del indicador de logro para contextualizar los aprendizajes esperados según el CNB Guatemala.",
+        "Activar conocimientos previos sobre responsabilidad del autor, trolling vs crítica constructiva y la huella digital.",
+        "Explicar la distribución de las fases del taller práctico de laboratorio (Lunes: publicación/iframe, Viernes: coevaluación/moderación).",
+        "Demostración paso a paso del código de incrustación <iframe> y edición en vista HTML en Blogger o Google Sites.",
+        "Introducción a la sección 3 para establecer el protocolo de moderación ética y control de comentarios.",
+        "Analizar los 3 casos prácticos (Aceptable, Inaceptable y Spam) y definir las acciones inmediatas para cada uno.",
+        "Configurar parámetros de moderación previa, filtros de palabras clave y protocolo de escalamiento institucional.",
+        "Reflexionar sobre los límites de la libertad de expresión y la importancia de defender la dignidad en entornos virtuales.",
+        "Explicar los criterios de evaluación detallados en la rúbrica sobre los 10 puntos totales de la actividad.",
+        "Indicaciones finales para iniciar el trabajo individual en las estaciones de laboratorio y atender dudas.",
+        "Presentación de referencias y enlaces de fuentes visuales utilizadas en la presentación."
+    ];
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slideCounter');
+    const teacherNotesText = document.getElementById('teacherNotesText');
+
+    function updateDeck() {
+        slides.forEach((slide, idx) => {
+            if (idx === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        slideCounter.textContent = `Diapositiva ${currentSlide + 1} / ${totalSlides}`;
+        teacherNotesText.textContent = teacherNotes[currentSlide] || "Sin notas para esta diapositiva.";
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateDeck();
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateDeck();
+        }
+    });
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateDeck();
+            }
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateDeck();
+            }
+        }
+    });
+
+    // Fullscreen Toggle
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
+</script>
+</body>
+</html>

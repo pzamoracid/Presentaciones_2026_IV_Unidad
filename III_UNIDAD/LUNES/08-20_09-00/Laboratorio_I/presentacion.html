@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía No. 6: Introducción a C++ - Presentación Docente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+        .slide-card {
+            display: none;
+            min-height: 580px;
+        }
+        .slide-card.active {
+            display: flex;
+        }
+        .code-keyword { color: #f43f5e; font-weight: 600; }
+        .code-type { color: #06b6d4; font-weight: 600; }
+        .code-string { color: #10b981; }
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-num { color: #f59e0b; }
+        .code-func { color: #8b5cf6; font-weight: 600; }
+        
+        /* Custom Scrollbar for notes */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-2 md:p-6 select-none">
+
+    <!-- Header / Navbar Superior -->
+    <header class="max-w-7xl w-full mx-auto flex flex-wrap justify-between items-center bg-slate-800/80 backdrop-blur border border-slate-700/60 rounded-xl p-3 mb-4 shadow-lg">
+        <div class="flex items-center space-x-3">
+            <span class="bg-blue-600 text-white font-bold text-xs uppercase px-3 py-1 rounded-full tracking-wider shadow">Laboratorio I</span>
+            <span class="text-slate-300 text-sm font-medium hidden sm:inline">Cuarto Bachillerato en Computación</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="slideCounter" class="text-cyan-400 font-mono text-sm font-semibold bg-slate-900/80 px-3 py-1 rounded-lg border border-slate-700">Diapositiva 1 de 22</span>
+            <button id="toggleNotesBtn" onclick="toggleTeacherNotes()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <span id="notesBtnText">Mostrar Notas Docente</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Slide Viewer Area -->
+    <main class="max-w-7xl w-full mx-auto flex-1 flex flex-col justify-center">
+        
+        <!-- DIAPOSITIVA 1: Portada -->
+        <section class="slide-card active flex-col justify-center items-center bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden text-center">
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
+            
+            <div class="inline-block bg-blue-500/10 border border-blue-500/30 text-blue-400 font-semibold px-4 py-1.5 rounded-full text-sm mb-6">
+                Colegio de Informática "Justo Rufino Bautista" • Ciclo Escolar 2026
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
+                Guía de Trabajo No. 6
+            </h1>
+            <h2 class="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-6">
+                Introducción a C++: Tipos Estrictos y Compilación
+            </h2>
+            
+            <p class="text-slate-300 text-lg max-w-2xl mx-auto mb-8 font-light">
+                Un recorrido conceptual y práctico por la estructura formal, la gestión de memoria y el proceso de compilación nativa en C++.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4 text-xs font-mono text-slate-400">
+                <span class="bg-slate-900/80 px-3 py-1.5 rounded-md border border-slate-700"><i class="fa-solid fa-code text-cyan-400 mr-2"></i>Curso: Laboratorio I</span>
+                <span class="bg-slate-900/80 px-3 py-1.5 rounded-md border border-slate-700"><i class="fa-solid fa-user-graduate text-cyan-400 mr-2"></i>Grado: 4º Bachillerato (4BACO)</span>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 2: ¿Qué vamos a aprender? -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Visión General</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-bullseye text-blue-500"></i> ¿Qué vamos a aprender en esta guía?
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 flex items-start gap-3">
+                        <div class="bg-blue-500/20 text-blue-400 p-2.5 rounded-lg"><i class="fa-solid fa-microchip text-lg"></i></div>
+                        <div>
+                            <h3 class="text-white font-semibold mb-1">Compilación vs. Interpretación</h3>
+                            <p class="text-slate-400 text-sm">Entender por qué C++ traduce a código máquina (.exe) directo y cómo optimiza la velocidad.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 flex items-start gap-3">
+                        <div class="bg-cyan-500/20 text-cyan-400 p-2.5 rounded-lg"><i class="fa-solid fa-shield-halved text-lg"></i></div>
+                        <div>
+                            <h3 class="text-white font-semibold mb-1">Tipado Estricto de Datos</h3>
+                            <p class="text-slate-400 text-sm">Por qué C++ exige declarar los tipos de datos (<code class="text-cyan-300">int</code>, <code class="text-cyan-300">double</code>, <code class="text-cyan-300">string</code>) antes de ejecutar.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 flex items-start gap-3">
+                        <div class="bg-indigo-500/20 text-indigo-400 p-2.5 rounded-lg"><i class="fa-solid fa-cubes text-lg"></i></div>
+                        <div>
+                            <h3 class="text-white font-semibold mb-1">Sintaxis Formal y Librerías</h3>
+                            <p class="text-slate-400 text-sm">Estructura esencial: <code class="text-indigo-300">#include &lt;iostream&gt;</code>, función <code class="text-indigo-300">main()</code> y <code class="text-indigo-300">using namespace std;</code>.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 flex items-start gap-3">
+                        <div class="bg-emerald-500/20 text-emerald-400 p-2.5 rounded-lg"><i class="fa-solid fa-terminal text-lg"></i></div>
+                        <div>
+                            <h3 class="text-white font-semibold mb-1">Entrada y Salida Interactivas</h3>
+                            <p class="text-slate-400 text-sm">Flujo de datos en consola con <code class="text-emerald-300">cin &gt;&gt;</code> y <code class="text-emerald-300">cout &lt;&lt;</code> y manejo de errores sintácticos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-blue-900/20 border border-blue-500/30 p-3 rounded-lg text-xs text-blue-300 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-blue-400"></i>
+                <span>Objetivo CNB: Crear aplicaciones estructuradas aplicando sintaxis formal y compilación directa para optimizar la memoria.</span>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 3: ¿Qué es C++? -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Introducción Tecnológica</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-code text-cyan-400"></i> ¿Qué es C++ y por qué es tan relevante?
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700 text-center flex flex-col items-center">
+                        <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-full flex items-center justify-center text-2xl mb-4"><i class="fa-solid fa-gauge-high"></i></div>
+                        <h3 class="text-white font-bold mb-2">Alto Rendimiento</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Acceso de bajo nivel a la memoria física del equipo, lo que genera ejecuciones ultrarrápidas sin intermediarios.</p>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700 text-center flex flex-col items-center">
+                        <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center text-2xl mb-4"><i class="fa-solid fa-laptop-code"></i></div>
+                        <h3 class="text-white font-bold mb-2">Lenguaje Compilado</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">El código fuente escrito por el programador se traduce completamente a código binario nativo (.exe) antes de ejecutarse.</p>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700 text-center flex flex-col items-center">
+                        <div class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-full flex items-center justify-center text-2xl mb-4"><i class="fa-solid fa-gamepad"></i></div>
+                        <h3 class="text-white font-bold mb-2">Estándar Industrial</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Utilizado para crear motores de videojuegos (Unreal Engine), sistemas operativos, navegadores web y software crítico.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-slate-900/90 border border-slate-700 rounded-xl flex items-center justify-between text-xs text-slate-300">
+                <span><strong class="text-cyan-400">Evolución:</strong> C++ fue diseñado por Bjarne Stroustrup como una extensión del lenguaje C, agregando tipos de datos estrictos y orientación a objetos.</span>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 4: Compilación vs. Interpretación -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Fundamento Técnico</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-bolt text-yellow-400"></i> Compilación vs. Interpretación
+                </h2>
+
+                <div class="overflow-x-auto mb-4">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-900 text-xs uppercase text-cyan-400 border-b border-slate-700">
+                            <tr>
+                                <th class="p-3">Característica</th>
+                                <th class="p-3 text-emerald-400"><i class="fa-brands fa-python mr-2"></i>Python (Interpretado)</th>
+                                <th class="p-3 text-cyan-400"><i class="fa-solid fa-code mr-2"></i>C++ (Compilado)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            <tr class="hover:bg-slate-900/30">
+                                <td class="p-3 font-semibold text-white">Ejecución</td>
+                                <td class="p-3">Línea por línea mediante un intérprete.</td>
+                                <td class="p-3">Traduce TODO el código fuente antes de ejecutar.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/30">
+                                <td class="p-3 font-semibold text-white">Producto Final</td>
+                                <td class="p-3">Requiere el instalador de Python.</td>
+                                <td class="p-3">Genera un archivo ejecutable directo (<code class="text-cyan-300">.exe</code>).</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/30">
+                                <td class="p-3 font-semibold text-white">Velocidad</td>
+                                <td class="p-3">Más lento (revisa errores en tiempo de ejecución).</td>
+                                <td class="p-3 font-bold text-emerald-400">Ultra rápido (código máquina directo).</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/30">
+                                <td class="p-3 font-semibold text-white">Detección de Errores</td>
+                                <td class="p-3">El programa se detiene cuando llega al error.</td>
+                                <td class="p-3">El compilador rechaza generar el <code class="text-cyan-300">.exe</code> si hay errores.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-300 flex items-center justify-between">
+                <span><i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i><strong>Analogía didáctica:</strong> Un lenguaje interpretado es como tener un traductor simultáneo leyendo párrafo por párrafo; un lenguaje compilado traduce el libro completo de antemano.</span>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 5: Tipado Estricto -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Gestión de Memoria RAM</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-box-archive text-indigo-400"></i> ¿Qué es el Tipado Estricto?
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <!-- Python Dinámico -->
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-emerald-400"><i class="fa-brands fa-python mr-2"></i>Python (Tipado Dinámico)</span>
+                            <span class="text-xs bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded">Implícito</span>
+                        </div>
+                        <pre class="bg-slate-950 p-3 rounded-lg text-emerald-300 text-sm mb-3"><code>x = 10</code></pre>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            El sistema adivina el tipo de dato durante la ejecución. Consume más recursos porque debe monitorear el tipo en tiempo real.
+                        </p>
+                    </div>
+
+                    <!-- C++ Estricto -->
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-cyan-500/40">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-code mr-2"></i>C++ (Tipado Estricto)</span>
+                            <span class="text-xs bg-cyan-500/10 text-cyan-300 px-2 py-0.5 rounded">Explícito</span>
+                        </div>
+                        <pre class="bg-slate-950 p-3 rounded-lg text-cyan-300 text-sm mb-3"><code><span class="code-type">int</span> x = <span class="code-num">10</span>;</code></pre>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Debes declarar obligatoriamente el tipo (<code class="text-cyan-300">int</code>). El compilador reserva exactamente la cantidad de bytes requerida en la memoria RAM antes de iniciar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-900/20 border border-blue-500/30 p-4 rounded-xl text-xs text-blue-200 flex items-center gap-3">
+                <i class="fa-solid fa-memory text-xl text-blue-400"></i>
+                <div>
+                    <strong>Ventaja Clave:</strong> Al saber con anticipación que <code class="text-cyan-300">int</code> requiere 4 bytes, C++ organiza la memoria de forma óptima sin desperdiciar almacenamiento.
+                </div>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 6: Estructura Básica -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Anatomía del Código</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-sitemap text-blue-400"></i> Estructura Básica de un Programa en C++
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div class="md:col-span-7 bg-slate-950 p-4 rounded-xl border border-slate-700 text-sm font-mono leading-relaxed">
+                        <div><span class="code-keyword">#include</span> <span class="code-string">&lt;iostream&gt;</span> <span class="code-comment">// Directiva de preprocesador</span></div>
+                        <div><span class="code-keyword">#include</span> <span class="code-string">&lt;string&gt;</span>   <span class="code-comment">// Soporte para cadenas de texto</span></div>
+                        <div class="mt-2"><span class="code-keyword">using namespace</span> std; <span class="code-comment">// Espacio de nombres estándar</span></div>
+                        <div class="mt-4"><span class="code-type">int</span> <span class="code-func">main</span>() { <span class="code-comment">// Función principal (Punto de entrada)</span></div>
+                        <div class="pl-6 text-slate-300"><span class="code-comment">// Bloque de código principal</span></div>
+                        <div class="pl-6 text-slate-300">cout &lt;&lt; <span class="code-string">"¡Hola Cuarto Bachillerato!"</span> &lt;&lt; endl;</div>
+                        <div class="mt-3 pl-6"><span class="code-keyword">return</span> <span class="code-num">0</span>; <span class="code-comment">// Retorno exitoso al sistema operativo</span></div>
+                        <div>}</div>
+                    </div>
+
+                    <div class="md:col-span-5 flex flex-col justify-center space-y-3 text-xs">
+                        <div class="p-3 bg-slate-900/80 border-l-4 border-rose-500 rounded-r-lg">
+                            <strong class="text-rose-400 block mb-0.5">1. Directivas (#include)</strong>
+                            <p class="text-slate-400">Cargan las herramientas previas necesarias antes de compilar.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900/80 border-l-4 border-purple-500 rounded-r-lg">
+                            <strong class="text-purple-400 block mb-0.5">2. Espacio de nombres</strong>
+                            <p class="text-slate-400">Evita tener que escribir <code class="text-slate-200">std::</code> antes de cada comando.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900/80 border-l-4 border-cyan-500 rounded-r-lg">
+                            <strong class="text-cyan-400 block mb-0.5">3. Función main()</strong>
+                            <p class="text-slate-400">El punto exacto donde la computadora empieza a ejecutar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 7: #include <iostream> -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Directiva de Preprocesador</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-file-import text-rose-400"></i> La librería <code class="text-rose-400">&lt;iostream&gt;</code>
+                </h2>
+
+                <div class="bg-slate-900/80 p-6 rounded-xl border border-slate-700 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="px-3 py-1 bg-rose-500/20 text-rose-300 font-mono text-sm rounded border border-rose-500/30">
+                            Input / Output Stream (Flujo de Entrada y Salida)
+                        </div>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Es una directiva de preprocesador que le indica al compilador que añada la biblioteca estándar para el manejo de consola antes de iniciar la compilación.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-950 rounded-lg border border-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-keyboard text-2xl text-cyan-400"></i>
+                            <div>
+                                <strong class="text-cyan-400 block text-sm">Habilita cin</strong>
+                                <span class="text-slate-400 text-xs">Captura la entrada de datos desde el teclado.</span>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-950 rounded-lg border border-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-desktop text-2xl text-emerald-400"></i>
+                            <div>
+                                <strong class="text-emerald-400 block text-sm">Habilita cout</strong>
+                                <span class="text-slate-400 text-xs">Muestra datos y mensajes impresos en la pantalla.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-xl text-xs text-rose-200">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                <strong>Atención:</strong> Sin <code class="text-rose-300">#include &lt;iostream&gt;</code>, el compilador marcará un error fatal indicando que los objetos <code class="text-rose-300">cin</code> y <code class="text-rose-300">cout</code> no han sido declarados.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 8: using namespace std; -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Espacios de Nombres</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-layer-group text-purple-400"></i> <code class="text-purple-400">using namespace std;</code>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-rose-500/30">
+                        <h3 class="text-rose-400 font-bold text-sm mb-3"><i class="fa-solid fa-xmark mr-2"></i>Sin `using namespace std;`</h3>
+                        <p class="text-slate-400 text-xs mb-3">Debes escribir el prefijo <code class="text-slate-200">std::</code> en cada instrucción de entrada, salida o salto de línea:</p>
+                        <pre class="bg-slate-950 p-3 rounded-lg text-xs font-mono text-slate-300"><code>std::cout &lt;&lt; <span class="code-string">"Hola"</span> &lt;&lt; std::endl;
+std::cin &gt;&gt; edad;</code></pre>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-emerald-500/30">
+                        <h3 class="text-emerald-400 font-bold text-sm mb-3"><i class="fa-solid fa-check mr-2"></i>Con `using namespace std;`</h3>
+                        <p class="text-slate-400 text-xs mb-3">Importas el espacio de nombres completo y escribes comandos directos y limpios:</p>
+                        <pre class="bg-slate-950 p-3 rounded-lg text-xs font-mono text-slate-300"><code>cout &lt;&lt; <span class="code-string">"Hola"</span> &lt;&lt; endl;
+cin &gt;&gt; edad;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-300 mt-4">
+                <strong>¿Qué es un namespace?</strong> Es una "carpeta conceptual" que agrupa herramientas del sistema para evitar colisiones de nombres si creas tus propias funciones con nombres similares.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 9: La función main() -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Punto de Entrada</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-door-open text-emerald-400"></i> La Función Principal <code class="text-emerald-400">int main()</code>
+                </h2>
+
+                <div class="bg-slate-900/80 p-6 rounded-xl border border-slate-700 space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-emerald-500/20 text-emerald-400 p-3 rounded-lg"><i class="fa-solid fa-play text-xl"></i></div>
+                        <div>
+                            <h3 class="text-white font-bold text-base">Puerta de Entrada Obligatoria</h3>
+                            <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                C++ no ejecuta código fuera de una función. El compilador busca automáticamente la función llamada <code class="text-emerald-300">main()</code> para iniciar el programa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-800">
+
+                    <div class="flex items-start gap-4">
+                        <div class="bg-yellow-500/20 text-yellow-400 p-3 rounded-lg"><i class="fa-solid fa-arrow-right-from-bracket text-xl"></i></div>
+                        <div>
+                            <h3 class="text-white font-bold text-base">Significado de <code class="text-yellow-400">return 0;</code></h3>
+                            <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                                Como la función devuelve un entero (<code class="text-cyan-300">int</code>), retornar un valor <code class="text-yellow-300">0</code> le notifica formalmente al Sistema Operativo que el programa finalizó con éxito y sin errores.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700 text-xs text-slate-400 text-center">
+                Cualquier número distinto de 0 (ej. <code class="text-rose-400">return 1;</code>) le avisaría al sistema que ocurrió un fallo o anomalía.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 10: Tipos de Datos Primarios -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Clasificación Estricta</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-tags text-cyan-400"></i> Tipos de Datos Primarios en C++
+                </h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <span class="text-cyan-400 font-mono font-bold text-base block mb-1">int</span>
+                        <span class="text-slate-300 text-xs block mb-2 font-semibold">Números Enteros</span>
+                        <p class="text-slate-400 text-xs">Sin decimales. Ej. edad, cantidad de productos.</p>
+                        <span class="text-slate-500 text-[10px] block mt-2 font-mono">Ej: 16, 250, -5</span>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <span class="text-blue-400 font-mono font-bold text-base block mb-1">double / float</span>
+                        <span class="text-slate-300 text-xs block mb-2 font-semibold">Números Decimales</span>
+                        <p class="text-slate-400 text-xs">Con punto decimal. double tiene el doble de precisión.</p>
+                        <span class="text-slate-500 text-[10px] block mt-2 font-mono">Ej: 88.75, 10.5</span>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <span class="text-emerald-400 font-mono font-bold text-base block mb-1">string</span>
+                        <span class="text-slate-300 text-xs block mb-2 font-semibold">Cadena de Texto</span>
+                        <p class="text-slate-400 text-xs">Secuencia de caracteres entre comillas dobles.</p>
+                        <span class="text-slate-500 text-[10px] block mt-2 font-mono">Ej: "Carlos Mendoza"</span>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <span class="text-purple-400 font-mono font-bold text-base block mb-1">char</span>
+                        <span class="text-slate-300 text-xs block mb-2 font-semibold">Carácter Único</span>
+                        <p class="text-slate-400 text-xs">Un solo símbolo entre comillas simples.</p>
+                        <span class="text-slate-500 text-[10px] block mt-2 font-mono">Ej: 'A', 'M', 'F'</span>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <span class="text-amber-400 font-mono font-bold text-base block mb-1">bool</span>
+                        <span class="text-slate-300 text-xs block mb-2 font-semibold">Booleano Lógico</span>
+                        <p class="text-slate-400 text-xs">Verdadero o Falso. En consola imprime 1 o 0.</p>
+                        <span class="text-slate-500 text-[10px] block mt-2 font-mono">Ej: true (1), false (0)</span>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex items-center justify-center text-center">
+                        <p class="text-xs text-slate-400">Cada tipo determina cuántos bytes exactos reserva la memoria RAM.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 11: Declaración de Variables -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Sintaxis Formal</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-code-commit text-indigo-400"></i> Declaración e Inicialización de Variables
+                </h2>
+
+                <div class="bg-slate-950 p-5 rounded-xl border border-slate-700 font-mono text-sm space-y-2 mb-6">
+                    <div><span class="code-type">string</span> nombreEstudiante = <span class="code-string">"Carlos Mendoza"</span>;</div>
+                    <div><span class="code-type">int</span> edad = <span class="code-num">16</span>;</div>
+                    <div><span class="code-type">double</span> promedioGeneral = <span class="code-num">88.75</span>;</div>
+                    <div><span class="code-type">char</span> seccion = <span class="code-string">'A'</span>;</div>
+                    <div><span class="code-type">bool</span> inscrito = <span class="code-keyword">true</span>;</div>
+                </div>
+
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                    <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Desglose de la Fórmula:</h3>
+                    <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-slate-200">
+                        <span class="bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded border border-cyan-500/30">[Tipo de Dato]</span>
+                        <span>+</span>
+                        <span class="bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded border border-indigo-500/30">[Nombre Identificador]</span>
+                        <span>=</span>
+                        <span class="bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded border border-emerald-500/30">[Valor Inicial]</span>
+                        <span>+</span>
+                        <span class="bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded border border-rose-500/30">;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-900/20 border border-blue-500/30 p-3 rounded-xl text-xs text-blue-200">
+                <i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i><strong>Regla de comillas:</strong> Cadenas de texto (<code class="text-cyan-300">string</code>) usan comillas dobles <code class="text-cyan-300">" "</code>, mientras que caracteres únicos (<code class="text-cyan-300">char</code>) usan comillas simples <code class="text-cyan-300">' '</code>.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 12: Salida con cout -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Impresión en Pantalla</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-print text-emerald-400"></i> Salida de Datos con <code class="text-emerald-400">cout</code>
+                </h2>
+
+                <div class="bg-slate-950 p-5 rounded-xl border border-slate-700 font-mono text-sm mb-6">
+                    cout &lt;&lt; <span class="code-string">"Nombre: "</span> &lt;&lt; nombreEstudiante &lt;&lt; endl;
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <strong class="text-emerald-400 font-mono text-sm block mb-1">cout</strong>
+                        <p class="text-slate-400">Objeto de salida estándar (Console Output).</p>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <strong class="text-cyan-400 font-mono text-sm block mb-1">&lt;&lt; (Inserción)</strong>
+                        <p class="text-slate-400">Operador de inserción. "Empuja" los datos hacia la pantalla.</p>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <strong class="text-indigo-400 font-mono text-sm block mb-1">endl</strong>
+                        <p class="text-slate-400">End Line. Inserta un salto de línea y limpia el búfer.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-300">
+                <strong>Concatenación:</strong> Puedes encadenar múltiples textos y variables usando consecutivamente el operador <code class="text-cyan-300">&lt;&lt;</code>.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 13: Entrada con cin -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Captura de Teclado</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-keyboard text-cyan-400"></i> Entrada de Datos Interactivas con <code class="text-cyan-400">cin</code>
+                </h2>
+
+                <div class="bg-slate-950 p-5 rounded-xl border border-slate-700 font-mono text-sm mb-6">
+                    cout &lt;&lt; <span class="code-string">"Ingrese la cantidad: "</span>;<br>
+                    cin &gt;&gt; cantidad;
+                </div>
+
+                <!-- Flujo paso a paso -->
+                <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-user text-cyan-400 text-xl mb-1"></i>
+                        <span class="block text-white font-bold">1. Usuario</span>
+                        <span class="text-slate-400 text-[10px]">Escribe en teclado</span>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-right-long text-emerald-400 text-xl mb-1"></i>
+                        <span class="block text-white font-bold">2. cin &gt;&gt;</span>
+                        <span class="text-slate-400 text-[10px]">Extrae el dato</span>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-memory text-indigo-400 text-xl mb-1"></i>
+                        <span class="block text-white font-bold">3. Variable</span>
+                        <span class="text-slate-400 text-[10px]">Guarda en RAM</span>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-gears text-yellow-400 text-xl mb-1"></i>
+                        <span class="block text-white font-bold">4. Proceso</span>
+                        <span class="text-slate-400 text-[10px]">Realiza cálculos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-xl text-xs text-rose-200 mt-4">
+                <i class="fa-solid fa-arrows-left-right mr-2"></i><strong>¡No confundir los operadores!</strong><br>
+                <code class="text-cyan-300">cout &lt;&lt;</code> apunta las flechas hacia AFUERA (pantalla).<br>
+                <code class="text-cyan-300">cin &gt;&gt;</code> apunta las flechas hacia ADENTRO (variable).
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 14: Ejercicio A de la Guía -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Taller de Laboratorio</span>
+                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-id-card text-blue-400"></i> Ejercicio A: Ficha de Registro de Usuario
+                </h2>
+                
+                <p class="text-slate-300 text-xs mb-4">
+                    Orientación para la resolución: El estudiante debe declarar variables con tipos de datos estrictos, asignar valores iniciales y mostrarlas formateadas en consola.
+                </p>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-700 font-mono text-xs space-y-1">
+                    <span class="code-comment">// Estructura general solicitada:</span><br>
+                    <span class="code-type">string</span> nombreEstudiante = <span class="code-string">"..."</span>;<br>
+                    <span class="code-type">int</span> edad = <span class="code-num">...</span>;<br>
+                    <span class="code-type">double</span> promedioGeneral = <span class="code-num">...</span>;<br>
+                    <span class="code-type">char</span> seccion = <span class="code-string">'...'</span>;<br>
+                    <span class="code-type">bool</span> inscrito = <span class="code-keyword">true</span>;<br><br>
+                    cout &lt;&lt; <span class="code-string">"=== FICHA DE REGISTRO ESTUDIANTIL ==="</span> &lt;&lt; endl;
+                </div>
+            </div>
+
+            <div class="bg-amber-900/20 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-300 flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-amber-400 text-lg"></i>
+                <span><strong>Tarea del Estudiante:</strong> Modificar los datos con su propia información personal, compilar y verificar que no existan errores sintácticos.</span>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 15: Ejercicio B de la Guía -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Taller de Laboratorio</span>
+                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-calculator text-emerald-400"></i> Ejercicio B: Calculadora de Facturación Interactivas
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mb-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <strong class="text-cyan-400 block mb-2 font-bold"><i class="fa-solid fa-list-check mr-1"></i> Datos a Solicitar (cin):</strong>
+                        <ul class="list-disc list-inside text-slate-300 space-y-1">
+                            <li>Nombre del producto (<code class="text-cyan-300">string</code>)</li>
+                            <li>Cantidad comprada (<code class="text-cyan-300">int</code>)</li>
+                            <li>Precio unitario en Quetzales (<code class="text-cyan-300">double</code>)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <strong class="text-emerald-400 block mb-2 font-bold"><i class="fa-solid fa-square-root-variable mr-1"></i> Fórmulas Aritméticas:</strong>
+                        <div class="bg-slate-950 p-2 rounded font-mono text-[11px] text-slate-300 space-y-1">
+                            <div>subtotal = cantidad * precioUnitario;</div>
+                            <div>totalConIVA = subtotal * 1.12;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-300">
+                <strong>Resultado en pantalla:</strong> Impresión formateada del resumen de facturación con Subtotal y Total con el 12% de IVA incluido.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 16: ¿Qué significa compilar? -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Proceso de Compilación</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-gears text-yellow-400"></i> Flujo Técnico: Del Código Fuente al Ejecutable
+                </h2>
+
+                <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-center my-6">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 w-full">
+                        <i class="fa-solid fa-file-code text-cyan-400 text-2xl mb-2"></i>
+                        <span class="block text-white font-bold text-xs">Código Fuente</span>
+                        <span class="text-slate-400 text-[10px] font-mono">Lab_G6.cpp</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right text-slate-500 text-xl hidden md:block"></i>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-yellow-500/40 w-full">
+                        <i class="fa-solid fa-microchip text-yellow-400 text-2xl mb-2"></i>
+                        <span class="block text-white font-bold text-xs">Compilador (g++)</span>
+                        <span class="text-slate-400 text-[10px]">Analiza sintaxis y optimiza</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right text-slate-500 text-xl hidden md:block"></i>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/40 w-full">
+                        <i class="fa-solid fa-window-maximize text-emerald-400 text-2xl mb-2"></i>
+                        <span class="block text-white font-bold text-xs">Ejecutable Binario</span>
+                        <span class="text-slate-400 text-[10px] font-mono">Lab_G6.exe</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-300">
+                <strong>Ficha de Auditoría:</strong> Los estudiantes registrarán en su cuaderno qué entorno usaron (Code::Blocks, VS Code, CXXDroid o OnlineGDB) y qué extensión generó el compilador.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 17: Errores de Compilación -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Depuración Técnica</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-bug text-rose-400"></i> Errores Sintácticos y el Delimitador <code class="text-rose-400">;</code>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-rose-500/40">
+                        <span class="text-rose-400 font-bold text-xs block mb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Código con Error Sintáctico:</span>
+                        <pre class="bg-slate-950 p-3 rounded text-xs font-mono text-slate-300"><code><span class="code-type">int</span> edad = <span class="code-num">17</span> <span class="code-comment">&lt;-- ¡Falta ;!</span>
+cout &lt;&lt; <span class="code-string">"Su edad es: "</span> &lt;&lt; edad;</code></pre>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-rose-400 flex flex-col justify-center">
+                        <span class="text-slate-500 block text-[10px] uppercase mb-1">Mensaje del Compilador (g++):</span>
+                        <code>error: expected ';' before 'cout'</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-900/20 border border-blue-500/30 p-4 rounded-xl text-xs text-blue-200">
+                <strong>¿Por qué es indispensable el punto y coma (<code class="text-cyan-300">;</code>)?</strong><br>
+                A diferencia de Python (que usa saltos de línea e sangría), C++ ignora los espacios en blanco. El punto y coma le indica al compilador dónde termina exactamente una instrucción en la memoria.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 18: Tipado y Truncamiento -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Incompatibilidad de Tipos</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-[#000] fa-scissors text-amber-400"></i> Truncamiento Implícito en C++
+                </h2>
+
+                <div class="bg-slate-950 p-5 rounded-xl border border-slate-700 font-mono text-sm mb-6">
+                    <span class="code-type">int</span> valor = <span class="code-num">10.85</span>; <span class="code-comment">// Asignación incorrecta</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <strong class="text-rose-400 font-bold block mb-1">¿Qué NO hace C++?</strong>
+                        <p class="text-slate-400">NO redondea el número a 11. C++ no aplica reglas de redondeo matemático automático.</p>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/40">
+                        <strong class="text-emerald-400 font-bold block mb-1">¿Qué ocurre técnicamente?</strong>
+                        <p class="text-slate-400">Trunca (desecha) la parte decimal <code class="text-amber-300">.85</code> y almacena únicamente el entero <code class="text-cyan-300">10</code> en la memoria RAM.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-950/30 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-200 mt-4">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                <strong>Conclusión:</strong> Para preservar valores con decimales (precios, promedios) se debe utilizar obligatoriamente <code class="text-cyan-300">double</code> o <code class="text-cyan-300">float</code>.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 19: ¿Qué deben entregar? -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Instrucciones de Entrega</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-book text-indigo-400"></i> Evidencias a Entregar en el Cuaderno
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-700">
+                        <strong class="text-cyan-400 block mb-2 font-bold"><i class="fa-solid fa-pen-field mr-2"></i>1. Trabajo Manuscrito (Cuaderno)</strong>
+                        <ul class="list-disc list-inside text-slate-300 space-y-1">
+                            <li>Sección 1: Diagnóstico (3 preguntas).</li>
+                            <li>Transcripción manuscrita de los 2 programas C++.</li>
+                            <li>Ficha de Auditoría de Compilación completada.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-700">
+                        <strong class="text-emerald-400 block mb-2 font-bold"><i class="fa-solid fa-laptop-code mr-2"></i>2. Secciones Técnicas y Ética</strong>
+                        <ul class="list-disc list-inside text-slate-300 space-y-1">
+                            <li>Sección 3: Análisis del error <code class="text-cyan-300 font-mono">;</code>, truncamiento y <code class="text-cyan-300 font-mono">std::</code>.</li>
+                            <li>Sección 4: Reflexión personal sobre el rigor sintáctico.</li>
+                            <li>Firma de enterado del encargado/padre de familia.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-300 flex justify-between items-center">
+                <span><i class="fa-solid fa-calendar text-cyan-400 mr-2"></i><strong>Fecha Límite:</strong> Viernes 14 de agosto de 2026 - 18:00 hrs</span>
+                <span class="bg-blue-600 text-white font-bold px-3 py-1 rounded-md">Valor: 10 Puntos</span>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 20: ¿Cómo serán evaluados? -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Criterios de Evaluación</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-list-check text-yellow-400"></i> Rúbrica Oficial de Evaluación (10 Puntos)
+                </h2>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900 uppercase text-cyan-400 border-b border-slate-700">
+                            <tr>
+                                <th class="p-3">Criterio</th>
+                                <th class="p-3">Excelente (100%)</th>
+                                <th class="p-3">Deficiente (0%)</th>
+                                <th class="p-3 text-right">Puntos</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            <tr>
+                                <td class="p-3 font-bold text-white">Secciones 1 y 4: Diagnóstico y Reflexión</td>
+                                <td class="p-3">Respuestas analíticas manuscritas sobre compilación, tipos y pensamiento lógico.</td>
+                                <td class="p-3 text-slate-500">No resolvió las secciones en el cuaderno.</td>
+                                <td class="p-3 font-bold text-cyan-400 text-right">3 Pts</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-white">Sección 2: Práctica de C++ y Auditoría</td>
+                                <td class="p-3">Desarrolló, compiló los 2 programas, llenó la ficha de auditoría y justificó <code class="text-slate-200">&lt;iostream&gt;</code>.</td>
+                                <td class="p-3 text-slate-500">Sin programas ni transcripción manuscrita.</td>
+                                <td class="p-3 font-bold text-cyan-400 text-right">4 Pts</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-white">Sección 3: Aplicación Técnica y Depuración</td>
+                                <td class="p-3">Explicación precisa del punto y coma, truncamiento por tipos y prefijo <code class="text-slate-200">std::</code>.</td>
+                                <td class="p-3 text-slate-500">Dejó la sección técnica en blanco.</td>
+                                <td class="p-3 font-bold text-cyan-400 text-right">3 Pts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700 text-xs text-slate-400 text-center">
+                Nota: La entrega debe ser individual, manuscrita en el cuaderno de laboratorio.
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 21: Actividad de Comprobación -->
+        <section class="slide-card flex-col justify-between bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div>
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-1">Repaso Interactivo</span>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-comments text-cyan-400"></i> Comprobación Oral Rápida
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 flex items-start gap-3">
+                        <span class="bg-cyan-500 text-slate-950 font-bold px-2 py-0.5 rounded">1</span>
+                        <div>
+                            <strong class="text-white block mb-0.5">¿Cuál es la función obligatoria de main()?</strong>
+                            <span class="text-slate-400">Es el punto de entrada por donde inicia la ejecución del programa.</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 flex items-start gap-3">
+                        <span class="bg-cyan-500 text-slate-950 font-bold px-2 py-0.5 rounded">2</span>
+                        <div>
+                            <strong class="text-white block mb-0.5">¿Para qué sirve #include &lt;iostream&gt;?</strong>
+                            <span class="text-slate-400">Para cargar la librería que habilita cin y cout.</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 flex items-start gap-3">
+                        <span class="bg-cyan-500 text-slate-950 font-bold px-2 py-0.5 rounded">3</span>
+                        <div>
+                            <strong class="text-white block mb-0.5">Diferencia entre int y double:</strong>
+                            <span class="text-slate-400">int guarda enteros sin decimales; double guarda valores decimales de precisión.</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 flex items-start gap-3">
+                        <span class="bg-cyan-500 text-slate-950 font-bold px-2 py-0.5 rounded">4</span>
+                        <div>
+                            <strong class="text-white block mb-0.5">¿Qué realiza el objeto cin &gt;&gt;?</strong>
+                            <span class="text-slate-400">Captura datos ingresados por el usuario desde el teclado.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 p-3 bg-slate-900 rounded-xl border border-slate-700 flex items-start gap-3 text-xs">
+                    <span class="bg-cyan-500 text-slate-950 font-bold px-2 py-0.5 rounded">5</span>
+                    <div>
+                        <strong class="text-white block mb-0.5">¿Por qué es vital el punto y coma (;) final?</strong>
+                        <span class="text-slate-400">Porque actúa como el delimitador explícito de fin de instrucción para el compilador.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIAPOSITIVA 22: Cierre -->
+        <section class="slide-card flex-col justify-center items-center bg-slate-800/50 border border-slate-700/80 rounded-2xl p-8 md:p-12 shadow-2xl text-center">
+            <div class="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-3xl mb-6">
+                <i class="fa-solid fa-code-merge"></i>
+            </div>
+
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4">
+                "El rigor sintáctico entrena la mente del programador."
+            </h2>
+
+            <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto mb-8 font-light">
+                Aprender C++ nos exige orden, precisión y estructuración lógica. ¡Manos a la obra en el laboratorio!
+            </p>
+
+            <div class="bg-slate-900/80 border border-slate-700 px-6 py-3 rounded-full text-xs font-mono text-cyan-400">
+                Colegio de Informática "Justo Rufino Bautista" • Laboratorio I
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Panel de Notas del Docente (Desplegable) -->
+    <div id="teacherNotesPanel" class="max-w-7xl w-full mx-auto mt-4 bg-slate-900 border border-indigo-500/40 rounded-xl p-4 hidden shadow-2xl transition-all">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+                <i class="fa-solid fa-chalkboard-user"></i> Notas del Docente (Discurso para la explicación en clase)
+            </span>
+            <span class="text-[10px] bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded font-mono">Guía de Exposición</span>
+        </div>
+        <p id="teacherNotesText" class="text-slate-300 text-xs leading-relaxed font-sans">
+            <!-- El contenido cambia dinámicamente con JS según la diapositiva activa -->
+        </p>
+    </div>
+
+    <!-- Footer / Barra de Navegación Inferior -->
+    <footer class="max-w-7xl w-full mx-auto flex flex-wrap justify-between items-center gap-3 bg-slate-800/80 backdrop-blur border border-slate-700/60 rounded-xl p-3 mt-4 shadow-lg">
+        <button onclick="prevSlide()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2">
+            <i class="fa-solid fa-chevron-left"></i> Anterior
+        </button>
+
+        <div class="flex items-center gap-2">
+            <label for="slideSelect" class="text-slate-400 text-xs hidden sm:inline">Ir a:</label>
+            <select id="slideSelect" onchange="goToSlide(this.value)" class="bg-slate-900 text-slate-200 border border-slate-700 text-xs rounded-lg px-2 py-1.5 focus:outline-none focus:border-cyan-500">
+                <!-- Generado por JS -->
+            </select>
+        </div>
+
+        <button onclick="nextSlide()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2">
+            Siguiente <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </footer>
+
+    <script>
+        // Arreglo de Notas del Docente para cada diapositiva
+        const notesData = [
+            /* 1 */ "¡Buenos días jóvenes! Hoy iniciaremos la Guía de Trabajo No. 6 de Laboratorio I. Daremos un salto fundamental: dejaremos por un momento los lenguajes interpretados para aprender C++, el lenguaje estándar de la industria para software de alto rendimiento.",
+            /* 2 */ "En esta diapositiva repasamos la hoja de ruta. Explíquenles que no sólo aprenderán a escribir código, sino a entender cómo la computadora gestiona la memoria RAM y procesa las instrucciones.",
+            /* 3 */ "Resalten que C++ es el motor detrás de juegos como Fortnite o Unreal Engine, navegadores web y sistemas operativos. Esto motiva a los estudiantes de 4º Bachillerato al ver el impacto profesional.",
+            /* 4 */ "Hagan énfasis en la tabla comparativa. Pregunten a la clase: ¿Por qué creen que un archivo ejecutable .exe abre más rápido que un script de Python? Expliquen el concepto de código máquina nativo.",
+            /* 5 */ "Comparen 'x = 10' de Python con 'int x = 10;' de C++. Expliquen que al indicarle al compilador que 'x' es un número entero (int), C++ reserva inmediatamente 4 bytes en la memoria RAM.",
+            /* 6 */ "Presenten el código 'Hola Mundo' básico. Vayan línea por línea explicando que C++ requiere una estructura formal ordenada y que nada funciona fuera de una función.",
+            /* 7 */ "Expliquen que 'iostream' significa 'Input/Output Stream'. Sin esta directiva de preprocesador, la computadora no sabe qué significa mostrar algo en pantalla (cout) o leer teclado (cin).",
+            /* 8 */ "Muestren la diferencia estética y práctica. Explíquenles que 'using namespace std;' nos ahorra tener que escribir 'std::' decenas de veces en programas largos.",
+            /* 9 */ "Apunten que 'main()' es el corazón de todo programa en C++. El comando 'return 0;' es el apretón de manos final entre nuestro programa y el sistema operativo para confirmar que todo salió bien.",
+            /* 10 */ "Muestren los tipos de datos relacionándolos con información personal del estudiante: edad (int), promedio (double), nombre (string), sección (char) y estado de inscripción (bool).",
+            /* 11 */ "Analicen la fórmula de declaración: Tipo + Nombre + Valor Inicial + Punto y coma. Recuérdenles la diferencia de comillas: dobles para string, simples para char.",
+            /* 12 */ "Enseñen la concatenación con cout <<. Muestren cómo el operador << funciona como una flecha que 'empuja' los mensajes y variables hacia la pantalla.",
+            /* 13 */ "Asegúrense de dejar clara la dirección de los operadores: cout usa << hacia afuera (pantalla) y cin usa >> hacia adentro (variable guardada en la RAM).",
+            /* 14 */ "Expliquen el Ejercicio A de la guía. Enfaticen que cada estudiante debe reemplazar las variables con sus datos personales. No resuelvan el código por completo en la pizarra; guíen la estructura.",
+            /* 15 */ "Repasen las fórmulas matemáticas del Ejercicio B: Subtotal (cantidad * precio) y Total con IVA (subtotal * 1.12). Recuerden verificar que usen variables de tipo double para los decimales.",
+            /* 16 */ "Muestren el diagrama del compilador. Expliquen que al presionar F9 o 'Build & Run' en su IDE, el archivo .cpp se transforma en un archivo binario .exe listo para ejecutarse.",
+            /* 17 */ "Muestren el error int edad = 17 sin punto y coma. Expliquen que el compilador g++ se detiene exactamente en la línea siguiente porque no encuentra la marca de fin de instrucción (;).",
+            /* 18 */ "Expliquen el concepto de truncamiento: Si asignan 10.85 a una variable int, C++ borra el .85 sin redondear. Para conservar los decimales, debemos usar el tipo double.",
+            /* 19 */ "Revisen la lista de comprobación de entregables en el cuaderno. Recuérdenles que la transcripción de los 2 programas debe ser hecha a mano e incluir la firma de su encargado.",
+            /* 20 */ "Repasen la rúbrica de 10 puntos para que tengan total claridad sobre cómo ganar el punteado completo (3 pts Diagnóstico, 4 pts Práctica C++, 3 pts Depuración Técnica).",
+            /* 21 */ "Hagan estas 5 preguntas orales al azar a la clase para verificar la comprensión antes de pasar al laboratorio práctico. Esto consolidará el aprendizaje de la sesión.",
+            /* 22 */ "Concluyan con un mensaje motivador sobre cómo el rigor y la disciplina sintáctica de C++ transforma a los estudiantes en verdaderos programadores estructurados y analíticos."
+        ];
+
+        let currentSlide = 0;
+        const totalSlides = 22;
+        const slideCards = document.querySelectorAll('.slide-card');
+        const slideCounter = document.getElementById('slideCounter');
+        const slideSelect = document.getElementById('slideSelect');
+        const teacherNotesPanel = document.getElementById('teacherNotesPanel');
+        const teacherNotesText = document.getElementById('teacherNotesText');
+        const notesBtnText = document.getElementById('notesBtnText');
+
+        // Inicializar el Select con las opciones de diapositiva
+        function initSelect() {
+            slideSelect.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `Diapositiva ${i + 1}`;
+                slideSelect.appendChild(opt);
+            }
+        }
+
+        // Mostrar diapositiva específica
+        function showSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            
+            slideCards[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slideCards[currentSlide].classList.add('active');
+
+            // Actualizar controles UI
+            slideCounter.textContent = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
+            slideSelect.value = currentSlide;
+
+            // Actualizar notas del docente
+            teacherNotesText.textContent = notesData[currentSlide];
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        function goToSlide(index) {
+            showSlide(parseInt(index));
+        }
+
+        function toggleTeacherNotes() {
+            if (teacherNotesPanel.classList.contains('hidden')) {
+                teacherNotesPanel.classList.remove('hidden');
+                notesBtnText.textContent = "Ocultar Notas Docente";
+            } else {
+                teacherNotesPanel.classList.add('hidden');
+                notesBtnText.textContent = "Mostrar Notas Docente";
+            }
+        }
+
+        // Navegación con teclado (Flecha Izquierda / Derecha)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            }
+        });
+
+        // Inicialización al cargar ventana
+        window.onload = function() {
+            initSelect();
+            showSlide(0);
+        };
+    </script>
+</body>
+</html>

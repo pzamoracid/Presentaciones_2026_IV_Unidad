@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevención del Plagio Digital y Bibliografía APA</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: rgba(30, 41, 59, 0.75);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-teal: #2dd4bf;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --teacher-bg: rgba(251, 191, 36, 0.1);
+            --teacher-border: rgba(251, 191, 36, 0.3);
+            --font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Header Navigation Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: transparent;
+        }
+
+        /* Presentation Container */
+        .presentation-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Typography & Tag */
+        .slide-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--accent-blue);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            width: fit-content;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ffffff, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: #ffffff;
+        }
+
+        p.description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 100%;
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Lists */
+        ul.custom-list, ol.custom-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        ul.custom-list li, ol.custom-list li {
+            position: relative;
+            padding-left: 1.8rem;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        ul.custom-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent-teal);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Step Cards for Tutorial */
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-teal);
+            border-radius: 0 12px 12px 0;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .step-num {
+            background: rgba(45, 212, 191, 0.15);
+            color: var(--accent-teal);
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .step-content {
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        /* Teacher Notes Box */
+        .teacher-note {
+            margin-top: 1.2rem;
+            background: var(--teacher-bg);
+            border: 1px solid var(--teacher-border);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .teacher-note-icon {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .teacher-note-text {
+            font-size: 0.9rem;
+            color: var(--accent-amber);
+            line-height: 1.4;
+        }
+
+        .teacher-note-text strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Footer Bar */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--card-border);
+            z-index: 10;
+        }
+
+        .slide-counter {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .key-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            margin-left: 0.3rem;
+        }
+
+        .score-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(45, 212, 191, 0.15);
+            border: 1px solid var(--accent-teal);
+            color: var(--accent-teal);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Colegio de Informática "Justo Rufino Bautista" | TAC — III Unidad</div>
+        <div class="header-controls">
+            <button class="btn" id="btn-fullscreen" onclick="toggleFullscreen()">
+                <span>⛶</span> Pantalla Completa
+            </button>
+        </div>
+    </header>
+
+    <main class="presentation-container">
+
+        <!-- SLIDE 1: PORTADA -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-tag">III Unidad — Investigación y Ética Digital</div>
+            <h1>Prevención del Plagio Digital y Bibliografía APA</h1>
+            <p class="description" style="color: var(--accent-teal); font-weight: 500;">
+                Estructuración y generación automatizada de citas y referencias formales en formato APA (7ma Edición) mediante herramientas digitales.
+            </p>
+            <div style="padding: 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--card-border); max-width: 650px;">
+                <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 0.4rem;"><strong>Curso:</strong> Tecnologías del Aprendizaje y el Conocimiento (TAC)</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;"><strong>Institución:</strong> Colegio de Informática "Justo Rufino Bautista"</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;"><strong>Unidad:</strong> Tercera Unidad</p>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Presentar la unidad introduciendo la importancia de dar crédito a los autores. Captar el interés mencionando que aprenderán a crear referencias completas en 1 solo clic.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: INDICADOR DE LOGRO -->
+        <div class="slide" id="slide-2">
+            <div class="slide-tag">Meta de Aprendizaje</div>
+            <h2>Indicador de Logro</h2>
+            <div class="card" style="border-left: 5px solid var(--accent-blue); padding: 2rem;">
+                <div class="card-icon">🎯</div>
+                <div class="card-title" style="font-size: 1.4rem; color: var(--accent-blue);">Competencia Esperada</div>
+                <p style="font-size: 1.2rem; color: var(--text-main); line-height: 1.7; margin-top: 0.5rem;">
+                    Valora el respeto a la propiedad intelectual y aplica normas internacionales de citación (APA) mediante el uso automatizado de herramientas digitales en documentos e investigaciones escolares.
+                </p>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Enfatizar que la meta combina dos dimensiones: la parte actitudinal (valorar el trabajo intelectual) y la parte práctica/tecnológica (usar gestores en Word y Google Docs).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: CONCEPTOS CLAVE DE HONESTIDAD -->
+        <div class="slide" id="slide-3">
+            <div class="slide-tag">Fundamentos Teóricos</div>
+            <h2>Conceptos Clave de Honestidad</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-icon">🏛️</div>
+                    <div class="card-title" style="color: var(--accent-blue);">Propiedad Intelectual</div>
+                    <div class="card-text">
+                        Derecho de los autores sobre sus creaciones. Reconocer el esfuerzo de investigación ajeno fortalece el rigor de tus trabajos escolares.
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚖️</div>
+                    <div class="card-title" style="color: var(--accent-teal);">Cita vs. Plagio</div>
+                    <div class="card-text">
+                        <strong>Citar</strong> es usar palabras ajenas respaldando tu opinión y dando crédito.<br><br>
+                        <strong>Plagiar</strong> es hacer pasar ideas de otros como si fueran tuyas.
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title" style="color: var(--accent-purple);">Automatización</div>
+                    <div class="card-text">
+                        Uso eficiente de procesadores de texto (Google Docs y Word) para organizar fuentes de forma estándar en un solo clic.
+                    </div>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Hacer una analogía clara: citar es dar testimonio del investigador que te respaldó; plagiar es robo intelectual. Resaltar que el procesador de texto trabaja por ellos si le ingresan los datos correctos.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: ¿QUÉ ES EL PLAGIO DIGITAL? -->
+        <div class="slide" id="slide-4">
+            <div class="slide-tag">Problemática Actual</div>
+            <h2>¿Qué es el Plagio Digital?</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title" style="color: var(--accent-rose);">⚠️ Prácticas que constituyen Plagio</div>
+                    <ul class="custom-list">
+                        <li>Copiar y pegar información directamente de sitios web sin indicar quién es el verdadero autor.</li>
+                        <li>Modificar algunas palabras por sinónimos sin otorgar crédito a la fuente original.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color: var(--accent-amber);">📉 Consecuencias e Impacto</div>
+                    <ul class="custom-list">
+                        <li>Ocultar las fuentes degrada tu propia reputación digital.</li>
+                        <li>Limita la calidad del aprendizaje real y el pensamiento crítico.</li>
+                        <li>Identificar fuentes confiables es el primer paso para construir argumentos propios bien respaldados.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Aclarar el mito frecuente: "Profe, pero le cambié tres palabras por sinónimos". Explicar que cambiar palabras sin citar sigue siendo plagio.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: DATOS ESENCIALES DE UNA FUENTE -->
+        <div class="slide" id="slide-5">
+            <div class="slide-tag">Identificación de Fuentes</div>
+            <h2>Datos Esenciales para Identificar una Fuente</h2>
+            <p class="description">Para que una cita o referencia sea formal en formato APA, se requiere recolectar 4 datos clave:</p>
+            <div class="grid-4">
+                <div class="card">
+                    <div class="card-title" style="color: var(--accent-blue);">👤 1. Autoría Formal</div>
+                    <div class="card-text">Nombre completo de la persona o nombre institucional de quien creó el contenido (ej. Pérez, J. o UNESCO).</div>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color: var(--accent-teal);">📅 2. Fecha de Publicación</div>
+                    <div class="card-text">Año exacto en que el documento, investigación o artículo fue subido o editado.</div>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color: var(--accent-purple);">📄 3. Título del Documento</div>
+                    <div class="card-text">Nombre específico de la obra, entrada web, noticia o investigación consultada.</div>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color: var(--accent-amber);">🌐 4. Ubicación Digital / Editorial</div>
+                    <div class="card-text">Enlace URL directo, código DOI o editorial responsable del escrito.</div>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Pedir a los estudiantes que memoricen esta fórmula: ¿Quién? (Autor), ¿Cuándo? (Fecha), ¿Qué? (Título) y ¿Dónde? (URL/Editorial).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: TALLER PRÁCTICO DE LABORATORIO -->
+        <div class="slide" id="slide-6">
+            <div class="slide-tag">Práctica Dirigida</div>
+            <h2>Taller Práctico de Laboratorio</h2>
+            <div class="card" style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--accent-teal); padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <span style="font-size: 2.5rem;">💻</span>
+                    <div>
+                        <h3 style="color: #ffffff; font-size: 1.4rem;">Actividad Práctica en Computadora</h3>
+                        <p style="color: var(--accent-teal); font-size: 1.1rem; font-weight: 600;">Investigación con Citación Automatizada</p>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <p style="color: #ffffff; font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>📌 Tema Central de Investigación:</strong></p>
+                    <p style="color: var(--accent-amber); font-size: 1.3rem; font-weight: 700;">"Uso Ético de la Inteligencia Artificial en la Educación"</p>
+                </div>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-top: 1rem;">
+                    <strong>🛠️ Herramienta Principal:</strong> Google Docs / Microsoft Word
+                </p>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Explicar la consigna del laboratorio. Los alumnos buscarán fuentes sobre la IA en la educación y aplicarán la herramienta de citas integrada en el software.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: PASOS PARA LA CITACIÓN AUTOMÁTICA -->
+        <div class="slide" id="slide-7">
+            <div class="slide-tag">Guía Paso a Paso</div>
+            <h2>Pasos para la Citación Automática</h2>
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-num">Paso 1</div>
+                    <div class="step-content">Accede al menú <strong>Herramientas &gt; Citas</strong> en Google Docs o a la pestaña <strong>Referencias</strong> en MS Word.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">Paso 2</div>
+                    <div class="step-content">Selecciona la norma internacional <strong>APA (7ma Edición)</strong> como formato de citación predeterminado.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">Paso 3</div>
+                    <div class="step-content">Agrega los datos de la fuente: <strong>Autor, Año, Título del artículo</strong> y enlace <strong>URL o DOI</strong> correspondiente.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">Paso 4</div>
+                    <div class="step-content">Haz clic en <strong>Insertar referencias / Bibliografía</strong> para generar automáticamente la lista completa con sangría francesa.</div>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Proyectar en pantalla el procesador de texto mientras se leen estos pasos para hacer una demostración en vivo (live demo).
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: VENTAJAS DEL ESTÁNDAR APA 7 -->
+        <div class="slide" id="slide-8">
+            <div class="slide-tag">Beneficios Tecnológicos</div>
+            <h2>Ventajas del Estándar APA 7</h2>
+            <div class="grid-2">
+                <div class="card" style="border-top: 4px solid var(--accent-blue);">
+                    <div class="card-icon">📚</div>
+                    <div class="card-title">Orden y Rigor Académico</div>
+                    <div class="card-text">
+                        El gestor automatizado ordena tus referencias de manera <strong>alfabética</strong> y aplica la <strong>sangría francesa</strong> requerida en un solo clic de forma estándar.
+                    </div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--accent-teal);">
+                    <div class="card-icon">⏱️</div>
+                    <div class="card-title">Eficiencia en el Trabajo</div>
+                    <div class="card-text">
+                        Ahorras tiempo en formato manual y evitas errores de puntuación, paréntesis o cursivas, permitiéndote enfocar en la calidad del contenido de tu investigación.
+                    </div>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Destacar la sangría francesa (primera línea sobresaliente) como el distintivo visual del formato APA y cómo el programa la configura automáticamente.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: ANÁLISIS DE CASOS - FALTAS FRECUENTES -->
+        <div class="slide" id="slide-9">
+            <div class="slide-tag">Análisis Crítico</div>
+            <h2>Análisis de Casos: Faltas Frecuentes</h2>
+            <div class="grid-2">
+                <div class="card" style="border-left: 4px solid var(--accent-amber);">
+                    <div class="card-title" style="color: var(--accent-amber);">✂️ Caso 1: "El Sastre Digital"</div>
+                    <div class="card-text">
+                        Copiar párrafos de distintas páginas y modificar solo algunas palabras con sinónimos <strong>sigue siendo plagio</strong> si no se atribuye la autoría a las fuentes originales mediante citas.
+                    </div>
+                </div>
+                <div class="card" style="border-left: 4px solid var(--accent-rose);">
+                    <div class="card-title" style="color: var(--accent-rose);">🤖 Caso 2: "El Fantasma en la IA"</div>
+                    <div class="card-text">
+                        Pedir a una Inteligencia Artificial que redacte un trabajo entero y entregarlo como propio <strong>no demuestra aprendizaje real</strong> e incurre en una falta grave de honestidad académica.
+                    </div>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Abrir un espacio de debate breve con el grupo. Preguntar: "¿Por qué creen que 'El Sastre Digital' engaña a quien redacta pero no al profesor?".
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: CASO 3 - LA CITA INCOMPLETA -->
+        <div class="slide" id="slide-10">
+            <div class="slide-tag">Análisis Crítico</div>
+            <h2>Caso 3: La Cita Incompleta</h2>
+            <div class="card" style="margin-bottom: 1.2rem;">
+                <div class="card-title" style="color: var(--accent-rose);">❓ ¿Por qué no basta con pegar la URL azul al final?</div>
+                <ul class="custom-list" style="margin-top: 0.8rem;">
+                    <li>Una lista con enlaces azules simples no cumple con el estándar bibliográfico formal APA.</li>
+                    <li>El lector o docente necesita conocer el <strong>autor</strong>, la <strong>fecha de publicación</strong> y el <strong>título</strong> para validar la veracidad de la fuente.</li>
+                    <li>Utilizar las herramientas integradas de Google Docs o Word soluciona este fallo en segundos.</li>
+                </ul>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Mostrar un ejemplo de una URL sola vs. una referencia APA estructurada para notar el contraste de profesionalismo.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: ESTRUCTURA DE EVALUACIÓN -->
+        <div class="slide" id="slide-11">
+            <div class="slide-tag">Criterios de Punteo</div>
+            <h2>Estructura de Evaluación</h2>
+            <div class="score-pill">
+                <span>🏆</span> Punteo Total: 10 Puntos
+            </div>
+            <div class="grid-3">
+                <div class="card">
+                    <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-blue); margin-bottom: 0.3rem;">3 PTS</div>
+                    <div class="card-title">Sección 1 y 4</div>
+                    <div class="card-text">Diagnóstico y Reflexión Ética elaborados individualmente en el cuaderno.</div>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-teal); margin-bottom: 0.3rem;">4 PTS</div>
+                    <div class="card-title">Sección 2</div>
+                    <div class="card-text">Taller Práctico de Citas APA en Laboratorio y entrega de Ficha de trabajo.</div>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-purple); margin-bottom: 0.3rem;">3 PTS</div>
+                    <div class="card-title">Sección 3</div>
+                    <div class="card-text">Análisis minucioso y resolución de los Casos de Plagio Digital.</div>
+                </div>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Aclarar el desglose de los 10 puntos para que los estudiantes organicen su tiempo entre la teoría del cuaderno y la práctica en computadora.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: CIERRE -->
+        <div class="slide" id="slide-12">
+            <div class="slide-tag">Inicio de Trabajo</div>
+            <h1 style="font-size: 3.2rem; text-align: center;">¿Listos para Trabajar?</h1>
+            <p class="description" style="text-align: center; font-size: 1.4rem; color: var(--accent-teal);">
+                Demostremos honestidad, rigor académico y dominio tecnológico.
+            </p>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <p style="font-size: 1.2rem; color: #ffffff; font-weight: 600;">Colegio de Informática "Justo Rufino Bautista"</p>
+                <p style="font-size: 1rem; color: var(--text-muted); margin-top: 0.3rem;">Asignatura: Tecnologías del Aprendizaje y el Conocimiento (TAC)</p>
+            </div>
+            <div class="teacher-note">
+                <div class="teacher-note-icon">💡</div>
+                <div class="teacher-note-text">
+                    <strong>Notas del Docente:</strong>
+                    Dar paso a las preguntas finales antes de que los estudiantes abran sus computadoras e inicien el taller en Google Docs / Word.
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="nav-buttons">
+            <button class="btn" id="btn-prev" onclick="prevSlide()">
+                ◄ Anterior <span class="key-hint">←</span>
+            </button>
+            <button class="btn" id="btn-next" onclick="nextSlide()">
+                Siguiente ► <span class="key-hint">→</span>
+            </button>
+        </div>
+        <div class="slide-counter" id="slide-counter">Diapositiva 1 de 12</div>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slide-counter');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            slideCounter.textContent = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
+            btnPrev.disabled = currentSlide === 0;
+            btnNext.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            }
+        });
+
+        // Fullscreen Toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error al intentar modo pantalla completa: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+</html>
+'''
+
+with open("presentacion.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
+
+print("Nuevo archivo presentacion.html de la III Unidad creado correctamente.")

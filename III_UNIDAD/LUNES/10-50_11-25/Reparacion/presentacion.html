@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía No. 6: Estrategias de Respaldo e Imagen de Recuperación de Sistema</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #070a12;
+            --card-bg: #0f172a;
+            --card-border: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+            --shadow-glow: 0 0 30px rgba(6, 182, 212, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        .presentation-deck {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            margin: 0 auto;
+        }
+
+        .slide-container {
+            align-items: flex-start;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), var(--shadow-glow);
+            display: none;
+            flex-direction: column;
+            height: 720px;
+            justify-content: flex-start;
+            overflow: hidden;
+            padding: 40px 50px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            z-index: 1;
+        }
+
+        .slide-container.active {
+            display: flex;
+            z-index: 2;
+        }
+
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                linear-gradient(rgba(30, 41, 59, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.25) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .slide-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .slide-title {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-main);
+            border-bottom: 2px solid rgba(6, 182, 212, 0.25);
+            padding-bottom: 10px;
+        }
+
+        .slide-title i {
+            color: var(--accent-cyan);
+            font-size: 26px;
+        }
+
+        p, li {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .content-area {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .title-badge {
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            color: var(--accent-cyan);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-layout h1 {
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.15;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            max-width: 1100px;
+        }
+
+        .title-layout .subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 950px;
+            line-height: 1.5;
+        }
+
+        .meta-info-strip {
+            display: flex;
+            gap: 18px;
+            margin-top: 25px;
+            background: rgba(30, 41, 59, 0.4);
+            padding: 10px 22px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            font-size: 13.5px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .meta-info-strip span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .section-title-layout h2 {
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .section-title-layout p {
+            font-size: 19px;
+            color: var(--accent-cyan);
+            max-width: 920px;
+            line-height: 1.6;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            margin: 18px 0;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .tile {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 22px 18px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tile h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .video-embed-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-fallback-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .video-fallback-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ffffff;
+            border-color: rgba(239, 68, 68, 0.8);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            font-size: 13.5px;
+        }
+
+        .custom-table th {
+            background: rgba(30, 41, 59, 0.8);
+            color: var(--accent-cyan);
+            font-weight: 700;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--card-border);
+            text-transform: uppercase;
+            font-size: 11.5px;
+            letter-spacing: 0.05em;
+        }
+
+        .custom-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+            color: var(--text-muted);
+            vertical-align: top;
+        }
+
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .custom-table strong {
+            color: var(--text-main);
+        }
+
+        .badge-pill {
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: var(--accent-cyan);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .styled-bullets {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .styled-bullets li {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 10px 14px;
+            border-radius: 0 10px 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14.5px;
+            color: var(--text-main);
+        }
+
+        .styled-bullets li i {
+            color: var(--accent-cyan);
+            font-size: 15px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .calc-box {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #e2e8f0;
+        }
+
+        .calc-box h4 {
+            color: var(--accent-purple);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .deck-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 1280px;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-cyan);
+            color: #070a12;
+            border-color: var(--accent-cyan);
+        }
+
+        .counter-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-muted);
+            background: rgba(30, 41, 59, 0.5);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .teacher-notes-panel {
+            width: 1280px;
+            margin-top: 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .teacher-notes-panel i {
+            color: var(--accent-cyan);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .teacher-notes-content {
+            font-size: 13.5px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .teacher-notes-label {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-deck">
+
+    <!-- SLIDE 1: PORTADA -->
+    <div class="slide-container active" id="slide1">
+        <div class="title-layout">
+            <div class="title-badge">
+                <i class="fa-solid fa-graduation-cap"></i> Colegio de Informática "Justo Rufino Bautista" • Guía No. 6
+            </div>
+            <h1>Estrategias de Respaldo e Imagen de Recuperación de Sistema</h1>
+            <p class="subtitle">Creación estructurada e implementación técnica de una imagen de respaldo (Backup de Sistema / Imagen ISO/IMG / Clonación de disco) para planes de contingencia, recuperación ante desastres y continuidad de operaciones.</p>
+            <div class="meta-info-strip">
+                <span><i class="fa-solid fa-gears"></i> Mantenimiento y Reparación de Computadoras</span>
+                <span><i class="fa-solid fa-users"></i> 5to. Bachillerato en Computación</span>
+                <span><i class="fa-solid fa-calendar-check"></i> Entrega: Viernes 14 de Agosto, 2026 - 18:00 hrs</span>
+                <span><i class="fa-solid fa-star"></i> Valor: 10 Pts</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: INDICADOR DE LOGRO CNB -->
+    <div class="slide-container" id="slide2">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-bullseye"></i> Marco Curricular CNB Guatemala</div>
+            <h2>Indicador de Logro</h2>
+            <div class="section-divider"></div>
+            <p>"Planifica e implementa estrategias formales de respaldo de información y creación de imágenes de sistemas operativos (clonación, imágenes ISO/IMG y backups completos), aplicando herramientas especializadas de mantenimiento, políticas de seguridad, compresión de datos y planes de contingencia para garantizar la disponibilidad e integridad de la infraestructura tecnológica."</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: SECCIÓN 0 - RECURSOS DIGITALES -->
+    <div class="slide-container" id="slide3">
+        <h2 class="slide-title"><i class="fa-solid fa-circle-play"></i> Sección 0: Recursos Digitales y Estudio Previo</h2>
+        <div class="content-area">
+            <div class="three-column">
+                <div class="tile" style="border-top: 4px solid var(--accent-cyan);">
+                    <div class="icon"><i class="fa-solid fa-video" style="color:var(--accent-cyan); margin-bottom:8px;"></i></div>
+                    <h3>Tutorial 1: Imágenes de Disco</h3>
+                    <p>Diferencia técnica entre copia manual, clonación bit a bit e imagen de sistema (ISO/IMG).</p>
+                    <div class="video-embed-container">
+                        <iframe src="https://www.youtube.com/embed/lway89rHXdw" title="Tutorial 1: Hacer imagen con Clonezilla" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <a href="https://youtu.be/lway89rHXdw" target="_blank" class="video-fallback-btn">
+                        <i class="fa-brands fa-youtube"></i> Abrir en YouTube si no reproduce
+                    </a>
+                </div>
+                <div class="tile" style="border-top: 4px solid var(--accent-purple);">
+                    <div class="icon"><i class="fa-solid fa-sliders" style="color:var(--accent-purple); margin-bottom:8px;"></i></div>
+                    <h3>Tutorial 2: Rescuezilla / Clonezilla</h3>
+                    <p>Paso a paso con herramientas profesionales de clonación y respaldo para planes de contingencia.</p>
+                    <div class="video-embed-container">
+                        <iframe src="https://www.youtube.com/embed/pJIhRug5JEA" title="Tutorial 2: Rescuezilla Respaldo y Restauración" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <a href="https://youtu.be/pJIhRug5JEA" target="_blank" class="video-fallback-btn">
+                        <i class="fa-brands fa-youtube"></i> Abrir en YouTube si no reproduce
+                    </a>
+                </div>
+                <div class="tile" style="border-top: 4px solid var(--accent-emerald);">
+                    <div class="icon"><i class="fa-solid fa-terminal" style="color:var(--accent-emerald); margin-bottom:8px;"></i></div>
+                    <h3>Herramientas Sugeridas</h3>
+                    <p><strong>Laboratorio (Live USB):</strong> Clonezilla, Rescuezilla, Macrium Reflect Free, Ventoy PXE.<br><br><strong>Línea de Comandos:</strong> Comando <code>dd</code> (Disk Dump) en Linux Live.<br><br><strong>Objetivo:</strong> HDD/SSD externo, almacenamiento secundario o virtual.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: SECCIÓN 1 - ACTIVACIÓN DE CONOCIMIENTOS -->
+    <div class="slide-container" id="slide4">
+        <h2 class="slide-title"><i class="fa-solid fa-brain"></i> Sección 1: Activación de Conocimientos (Cuaderno - 2 Pts)</h2>
+        <div class="content-area">
+            <div class="three-column">
+                <div class="tile">
+                    <div class="icon" style="color:var(--accent-cyan); font-size:24px; margin-bottom:10px;"><i class="fa-solid fa-hard-drive"></i></div>
+                    <h3>1. Copia de Archivos vs. Imagen de Sistema</h3>
+                    <p>Copiar carpetas no copia el MBR/GPT, sectores de arranque (VBR) ni archivos bloqueados del SO. Tras un fallo de disco, la copia manual no permite bootear; la imagen de sistema restaura el SO funcional desde cero.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon" style="color:var(--accent-purple); font-size:24px; margin-bottom:10px;"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>2. La Regla de Respaldo 3-2-1</h3>
+                    <p><strong>3 Copias</strong> de los datos (1 principal + 2 respaldos), <strong>2 Medios</strong> de almacenamiento distintos (HDD + SSD/Cinta/Nube) y <strong>1 Copia Off-site</strong> (fuera de la empresa) contra incendios, robos y desastres.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon" style="color:var(--accent-amber); font-size:24px; margin-bottom:10px;"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>3. Completo vs. Incremental vs. Diferencial</h3>
+                    <p><strong>Completo:</strong> Copia todo (lento, usa más disco).<br><strong>Incremental:</strong> Copia cambios desde el último respaldo (rápido, restaura lento).<br><strong>Diferencial:</strong> Copia cambios desde el último completo (balanceado).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: SECCIÓN 2 - TALLER PRÁCTICO CRONOGRAMA -->
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title"><i class="fa-solid fa-calendar-days"></i> Sección 2: Taller Práctico - Cronograma de Laboratorio (4 Pts)</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div class="tile" style="border-left: 4px solid var(--accent-cyan);">
+                    <div class="icon" style="color:var(--accent-cyan); font-size:22px; margin-bottom:8px;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <h3>LUNES: Preparación y Auditoría Base</h3>
+                    <ul class="styled-bullets" style="margin-top: 10px;">
+                        <li><i class="fa-solid fa-check"></i> <strong>Auditoría del equipo:</strong> Limpieza de archivos temporales y optimización de almacenamiento.</li>
+                        <li><i class="fa-solid fa-microchip"></i> <strong>Verificación de estructura:</strong> Identificar MBR o GPT y modo de arranque (Legacy BIOS / UEFI).</li>
+                        <li><i class="fa-solid fa-usb"></i> <strong>Preparación de medio:</strong> Crear Live USB con Rescuezilla / Clonezilla o Ventoy.</li>
+                    </ul>
+                </div>
+                <div class="tile" style="border-left: 4px solid var(--accent-purple);">
+                    <div class="icon" style="color:var(--accent-purple); font-size:22px; margin-bottom:8px;"><i class="fa-solid fa-compact-disc"></i></div>
+                    <h3>VIERNES: Ejecución de Backup y Ficha</h3>
+                    <ul class="styled-bullets" style="margin-top: 10px;">
+                        <li><i class="fa-solid fa-power-off"></i> <strong>Booting Live USB:</strong> Iniciar la computadora en entorno Rescuezilla / Clonezilla.</li>
+                        <li><i class="fa-solid fa-file-export"></i> <strong>Generación de Imagen:</strong> Crear archivo de sistema comprimido (.iso, .img o .vhd) en almacenamiento secundario.</li>
+                        <li><i class="fa-solid fa-clipboard-check"></i> <strong>Registro de métricas:</strong> Medir velocidad de lectura/escritura, ratio de compresión y transcribir Ficha en el cuaderno.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: FICHA DE AUDITORÍA TÉCNICA -->
+    <div class="slide-container" id="slide6">
+        <h2 class="slide-title"><i class="fa-solid fa-table-list"></i> Matriz de Auditoría Técnica de Respaldo y Clonación</h2>
+        <div class="content-area">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Sección de Auditoría</th>
+                        <th>Campos de Registro Obligatorios (Transcribir a Mano en Cuaderno)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Datos del Equipo Objetivo</strong></td>
+                        <td>Nombre del Equipo • Modelo de Procesador y RAM • Tipo de Disco Origen (HDD / SSD SATA / NVMe) • Capacidad Total (GB) • Espacio Usado (GB) • Estructura (MBR / GPT) • Modo de Arranque (Legacy BIOS / UEFI).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Especificaciones de Herramienta</strong></td>
+                        <td>Software (Clonezilla / Rescuezilla / Macrium / <code>dd</code>) • Tipo de Operación (Disco a Disco / Disco a Imagen ISO/IMG) • Compresión (Ninguna / Estándar / Alta) • Tamaño Final de Imagen (GB) • Ratio de Compresión (%) • Tiempo Total (min).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Plan de Recuperación ante Desastres</strong></td>
+                        <td>Ubicación de Almacenamiento Objetivo • Protocolo de Verificación de Integridad (Checksum / Hash SHA-256) • Pasos Cronológicos de Restauración en Contingencias.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:10px 16px; font-size:13px; color:#fde68a; width:100%;">
+                <i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-amber); margin-right:6px;"></i> <strong>Justificación Técnica Pre-Clonación:</strong> Es indispensable ejecutar <code>chkdsk</code> o diagnóstico S.M.A.R.T. antes de clonar para reparar sectores lógicos y verificar la salud de las celdas/platos. Clonar un disco con corrupción de archivos o sectores dañados propaga los errores a la imagen de respaldo.
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: SECCIÓN 3 - APLICACIÓN TÉCNICA Y CÁLCULOS -->
+    <div class="slide-container" id="slide7">
+        <h2 class="slide-title"><i class="fa-solid fa-calculator"></i> Sección 3: Diagnóstico, Contingencias y Compresión (3 Pts)</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div class="tile">
+                    <h3><i class="fa-solid fa-bug" style="color:var(--accent-rose); margin-right:6px;"></i> 1. Sectores Defectuosos</h3>
+                    <p style="font-size:14px;">Si Clonezilla falla por "Read error / Bad sectors", se habilitan opciones avanzadas como el parámetro <code>-q2</code> (Rescue mode) o la herramienta de bajo nivel <code>ddrescue</code>, las cuales ignoran sectores ilegibles y leen exhaustivamente para recuperar bloques intactos.</p>
+                    
+                    <h3 style="margin-top:14px;"><i class="fa-solid fa-lock-open" style="color:var(--accent-amber); margin-right:6px;"></i> 3. Ransomware vs. Cold Backup</h3>
+                    <p style="font-size:14px;">Un respaldo conectado permanentemente (Hot Backup) es cifrado por un ransomware junto con el sistema. Un <strong>Cold Backup (Respaldos fuera de línea/offline)</strong> físico disconnected imposibilita el acceso malicioso de red.</p>
+                </div>
+                <div class="tile">
+                    <h3><i class="fa-solid fa-chart-pie" style="color:var(--accent-purple); margin-right:6px;"></i> 2. Cálculo de Capacidad para Contingencias</h3>
+                    <div class="calc-box">
+                        <h4>Escenario: SSD con 240 GB usados, Compresión 2:1 (50%)</h4>
+                        <p><strong>a) Tamaño de la Imagen resultante:</strong><br>
+                        240 GB × (1 - 0.50) = <strong>120 GB por Imagen</strong></p>
+                        <br>
+                        <p><strong>b) Cantidad de imágenes en disco externo de 1 TB (1024 GB):</strong><br>
+                        1024 GB / 120 GB = 8.53 → <strong>8 Imágenes Completas</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: SECCIÓN 4 - ÉTICA Y RESPONSABILIDAD -->
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title"><i class="fa-solid fa-user-shield"></i> Sección 4: Ética y Reflexión del Administrador de Sistemas (1 Pt)</h2>
+        <div class="content-area">
+            <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--card-border); border-radius: 16px; padding: 30px; text-align: center; position: relative; max-width: 980px;">
+                <i class="fa-solid fa-quote-left" style="font-size: 36px; color: rgba(6, 182, 212, 0.25); position: absolute; top: 20px; left: 25px;"></i>
+                <p style="font-size: 20px; font-weight: 700; color: #f1f5f9; font-style: italic; line-height: 1.5; margin-bottom: 20px;">
+                    "La pérdida irreparable de datos en una empresa o institución casi nunca es un accidente técnico; la mayoría de las veces es el resultado de la falta de un plan de contingencia formal, riguroso y supervisado."
+                </p>
+                <div style="border-top: 1px solid var(--card-border); padding-top: 15px; color: var(--accent-cyan); font-weight: 600; font-size: 15px;">
+                    ¿De qué manera el rigor metodológico, la confidencialidad de la información y la disciplina en la ejecución de copias de seguridad reflejan la ética profesional del Bachiller en Computación en su rol como custodio de la infraestructura tecnológica?
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: RÚBRICA DE EVALUACIÓN -->
+    <div class="slide-container" id="slide9">
+        <h2 class="slide-title"><i class="fa-solid fa-list-check"></i> Rúbrica de Evaluación Explícita (10 Puntos)</h2>
+        <div class="content-area">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Criterio Evaluado</th>
+                        <th>Excelente (100%)</th>
+                        <th>Aceptable</th>
+                        <th>Deficiente (0%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Secciones 1 y 4: Diagnóstico y Ética</strong></td>
+                        <td>Respondió analíticamente sobre la diferencia de imagen vs copia manual, regla 3-2-1, tipos de backup y ética profesional. <strong>(3 Pts)</strong></td>
+                        <td>Respuestas imprecisas, incompletas o escasa argumentación técnica. <strong>(2 Pts)</strong></td>
+                        <td>No resolvió los ejercicios en el cuaderno. <strong>(0 Pts)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sección 2: Taller y Auditoría</strong></td>
+                        <td>Ejecutó el respaldo Live USB de forma práctica y completó la Ficha de Auditoría con todas las métricas en el cuaderno. <strong>(4 Pts)</strong></td>
+                        <td>Práctica incompleta o datos de la Ficha omitidos parcialmente. <strong>(2 Pts)</strong></td>
+                        <td>No participó en el laboratorio ni entregó la Ficha. <strong>(0 Pts)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sección 3: Aplicación Técnica</strong></td>
+                        <td>Resolvió correctamente el caso de sectores defectuosos, cálculo exacto de GB/imágenes y análisis de ransomware. <strong>(3 Pts)</strong></td>
+                        <td>Errores en el cálculo matemático o explicación conceptual confusa. <strong>(2 Pts)</strong></td>
+                        <td>Dejó la sección en blanco. <strong>(0 Pts)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLIDE 10: FORMALIDAD Y ENTREGA -->
+    <div class="slide-container" id="slide10">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-signature"></i> Formalidad y Entrega</div>
+            <h2>Firma de Enterado e Instrucciones Finales</h2>
+            <div class="section-divider"></div>
+            <p style="font-size: 16px; color: var(--text-muted); max-width: 850px; margin-bottom: 20px;">
+                Recuerda presentar la Guía No. 6 firmada a mano por tu Padre, Madre o Encargado, junto con los ejercicios a mano en el cuaderno y la Ficha de Auditoría de Laboratorio completa el <strong>Viernes 14 de Agosto de 2026 a las 18:00 hrs</strong>.
+            </p>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:15px; color:var(--accent-cyan); background:rgba(30,41,59,0.5); padding:10px 24px; border-radius:10px; border:1px solid var(--card-border);">
+                Colegio de Informática "Justo Rufino Bautista" • Ciclo Escolar 2026
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- CONTROLES NAVEGACIÓN DE DIAPOSITIVAS -->
+<div class="deck-controls">
+    <button class="nav-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+    <div class="counter-badge" id="slideCounter">Diapositiva 1 / 10</div>
+    <div style="display:flex; gap:10px;">
+        <button class="nav-btn" id="fullscreenBtn"><i class="fa-solid fa-expand"></i> Pantalla Completa</button>
+        <button class="nav-btn" id="nextBtn">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<!-- PANEL DE NOTAS DEL DOCENTE -->
+<div class="teacher-notes-panel">
+    <i class="fa-solid fa-note-sticky"></i>
+    <div>
+        <div class="teacher-notes-label">Notas del Docente</div>
+        <div class="teacher-notes-content" id="teacherNotesText">
+            Presentación de la Guía No. 6 sobre Estrategias de Respaldo e Imagen de Recuperación de Sistema para 5to Bachillerato en Computación.
+        </div>
+    </div>
+</div>
+
+<script>
+    const teacherNotes = [
+        "Presentación de la Guía No. 6: Estrategias de Respaldo e Imagen de Recuperación de Sistema para 5to Bachillerato en Computación.",
+        "Lectura guiada del Indicador de Logro del CNB enfocado en planificación e implementación formal de copias e imágenes ISO/IMG.",
+        "Revisión de tutoriales en video (Rescuezilla, Clonezilla y Macrium Reflect) para preparación del trabajo con Live USB.",
+        "Discusión técnica de las preguntas diagnósticas: diferencia entre copia manual e imagen, regla 3-2-1 y tipos de respaldo.",
+        "Explicación del cronograma de Laboratorio de Mantenimiento (Lunes: auditoría y Live USB / Viernes: ejecución y Ficha técnica).",
+        "Análisis de los campos requeridos en la Ficha de Auditoría Técnica e importancia del chkdsk/S.M.A.R.T. antes de la clonación.",
+        "Resolución guiada de ejercicios de compresión (240GB a ratio 2:1 = 120GB), sectores defectuosos (-q2/ddrescue) y Cold Backups.",
+        "Reflexión sobre el compromiso ético, confidencialidad y responsabilidad del administrador de sistemas en la protección de datos.",
+        "Desglose de la rúbrica de evaluación detallada sobre los 10 puntos totales de la Guía No. 6.",
+        "Recordatorio final sobre la fecha de entrega (Viernes 14 de agosto de 2026 - 18:00 hrs) y firma obligatoria del encargado."
+    ];
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slideCounter');
+    const teacherNotesText = document.getElementById('teacherNotesText');
+
+    function updateDeck() {
+        slides.forEach((slide, idx) => {
+            if (idx === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        slideCounter.textContent = `Diapositiva ${currentSlide + 1} / ${totalSlides}`;
+        teacherNotesText.textContent = teacherNotes[currentSlide] || "Sin notas para esta diapositiva.";
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateDeck();
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateDeck();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateDeck();
+            }
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateDeck();
+            }
+        }
+    });
+
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    });
+</script>
+</body>
+</html>

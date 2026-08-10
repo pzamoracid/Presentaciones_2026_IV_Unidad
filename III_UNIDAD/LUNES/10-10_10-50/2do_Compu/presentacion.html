@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estructuración de Fuentes y Generación de Bibliografías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        /* Presentation Frame Container */
+        .presentation-deck {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            margin: 0 auto;
+        }
+
+        .slide-container {
+            align-items: flex-start;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+            display: none;
+            flex-direction: column;
+            height: 720px;
+            justify-content: flex-start;
+            overflow: hidden;
+            padding: 50px 60px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            z-index: 1;
+        }
+
+        .slide-container.active {
+            display: flex;
+            z-index: 2;
+        }
+
+        /* Ambient Background Grid Pattern */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .slide-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .slide-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-main);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+            padding-bottom: 12px;
+        }
+
+        .slide-title i {
+            color: var(--accent-cyan);
+            font-size: 28px;
+        }
+
+        p, li {
+            color: var(--text-muted);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .content-area {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Title Slide Layout */
+        .title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .title-badge {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: var(--accent-cyan);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-layout h1 {
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.15;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            max-width: 1050px;
+        }
+
+        .title-layout .subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 880px;
+            line-height: 1.5;
+        }
+
+        /* Section Header Layout */
+        .section-title-layout {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .section-title-layout h2 {
+            font-size: 44px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .section-title-layout p {
+            font-size: 22px;
+            color: var(--accent-cyan);
+            max-width: 850px;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            margin: 25px 0;
+        }
+
+        /* Grid & Card Containers */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .tiled-content {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .tile {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 30px 25px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .tile:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .tile .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .tile h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .tile p {
+            font-size: 15px;
+            line-height: 1.55;
+        }
+
+        /* Formula Card Styling */
+        .formula-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 22px 25px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .formula-card h3 {
+            font-size: 19px;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .formula-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 15px;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        /* Bullet Lists */
+        .styled-bullets {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .styled-bullets li {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--accent-blue);
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .styled-bullets li i {
+            color: var(--accent-cyan);
+            font-size: 18px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        /* Timeline Process Layout */
+        .timeline-layout {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: relative;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .timeline-layout::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: rgba(59, 130, 246, 0.2);
+            z-index: 0;
+        }
+
+        .timeline-step {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .timeline-step h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--accent-cyan);
+        }
+
+        .timeline-step p {
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        /* Metric & Rubric Card */
+        .metric-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .metric-number {
+            font-size: 90px;
+            font-weight: 800;
+            line-height: 1;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Navigation Deck Controls */
+        .deck-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 1280px;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .counter-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-muted);
+            background: rgba(30, 41, 59, 0.5);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        /* Teacher Notes Panel */
+        .teacher-notes-panel {
+            width: 1280px;
+            margin-top: 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .teacher-notes-panel i {
+            color: var(--accent-cyan);
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .teacher-notes-content {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .teacher-notes-label {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-deck">
+
+    <!-- Slide 1: Title Slide -->
+    <div class="slide-container active" id="slide1">
+        <div class="title-layout">
+            <div class="title-badge"><i class="fa-solid fa-graduation-cap"></i> Colegio de Informática "Justo Rufino Bautista"</div>
+            <h1>Estructuración de Fuentes y Generación de Bibliografías</h1>
+            <p class="subtitle">Construcción manual y automatización formal de referencias bibliográficas según el estándar APA (7.ª Edición) en Google Docs y MS Word.</p>
+        </div>
+    </div>
+
+    <!-- Slide 2: Indicador de Logro (CNB) -->
+    <div class="slide-container" id="slide2">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-bullseye"></i> Unidad III • Apoyo Docente</div>
+            <h2>Indicador de Logro (CNB)</h2>
+            <div class="section-divider"></div>
+            <p>"Consolida la validez técnica y científica de investigaciones digitales mediante la estructuración manual y automatizada de referencias bibliográficas (APA 7.ª Edición), discriminando tipologías de fuentes y asegurando la integridad académica."</p>
+        </div>
+    </div>
+
+    <!-- Slide 3: Sección 1: Activación de Conocimientos -->
+    <div class="slide-container" id="slide3">
+        <h2 class="slide-title"><i class="fa-solid fa-lightbulb"></i> Sección 1: Activación de Conocimientos</h2>
+        <div class="content-area">
+            <div class="tiled-content">
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-dna"></i></div>
+                    <h3>Anatomía de una Fuente</h3>
+                    <p>Identificar autor, título, fecha y editorial diferencia una fuente académica verídica de un blog o sitio dudoso en internet.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-sliders"></i></div>
+                    <h3>Manual vs. Automático</h3>
+                    <p>Comprender la fórmula lógica APA manual permite al estudiante verificar y corregir errores del gestor automático.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-link-slash"></i></div>
+                    <h3>El Error del "Enlace Suelto"</h3>
+                    <p>Pegar solo enlaces en azul (https://...) carece de rigor formal. Una referencia académica exige autoría, fecha y contexto.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Sección 2: Taller Práctico de Laboratorio -->
+    <div class="slide-container" id="slide4">
+        <h2 class="slide-title"><i class="fa-solid fa-laptop-code"></i> Sección 2: Taller Práctico de Laboratorio</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div class="tile" style="border-left: 4px solid var(--accent-blue);">
+                    <div class="icon"><i class="fa-solid fa-pen-ruler"></i></div>
+                    <h3>LUNES: Fase Manual</h3>
+                    <ul class="styled-bullets" style="margin-top: 10px;">
+                        <li><i class="fa-solid fa-check"></i> Selección de 3 fuentes: 1 Libro Digital, 1 Página Web Informativa y 1 Artículo Científico.</li>
+                        <li><i class="fa-solid fa-file-signature"></i> Creación del archivo formal: <strong>TAC_G6_Apellido_Nombre</strong>.</li>
+                        <li><i class="fa-solid fa-book-open-reader"></i> Desglose de fórmulas APA 7 a mano en la Ficha del Cuaderno.</li>
+                    </ul>
+                </div>
+                <div class="tile" style="border-left: 4px solid var(--accent-cyan);">
+                    <div class="icon"><i class="fa-solid fa-gears"></i></div>
+                    <h3>VIERNES: Automatización</h3>
+                    <ul class="styled-bullets" style="margin-top: 10px;">
+                        <li><i class="fa-solid fa-database"></i> Registro de las 3 fuentes en el gestor de Citas del procesador de texto.</li>
+                        <li><i class="fa-solid fa-quote-right"></i> Inserción de citas entrecomilladas en el cuerpo del informe.</li>
+                        <li><i class="fa-solid fa-wand-magic-sparkles"></i> Generación de la bibliografía con Sangría Francesa en 1 solo clic.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Fórmulas Manuales APA (7.ª Edición) -->
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title"><i class="fa-solid fa-code"></i> Fórmulas Manuales APA (7.ª Edición)</h2>
+        <div class="content-area">
+            <div class="formula-card">
+                <h3><i class="fa-solid fa-book"></i> Libro Digital</h3>
+                <div class="formula-code">Apellido, Inicial. (Año). <em>Título en cursiva</em>. Editorial.</div>
+            </div>
+            <div class="formula-card">
+                <h3><i class="fa-solid fa-globe"></i> Página Web Informativa</h3>
+                <div class="formula-code">Apellido, Inicial. (Fecha exacta). Título del artículo. <em>Nombre del sitio web</em>. URL</div>
+            </div>
+            <div class="formula-card">
+                <h3><i class="fa-solid fa-flask-vial"></i> Artículo Científico / Revista</h3>
+                <div class="formula-code">Apellido, Inicial. (Año). Título. <em>Nombre Revista</em>, vol(no), pp. DOI / URL</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Sección 3: Análisis de Casos Prácticos -->
+    <div class="slide-container" id="slide6">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-microscope"></i> Investigación Digital</div>
+            <h2>Sección 3: Análisis de Casos Prácticos</h2>
+            <div class="section-divider"></div>
+            <p>Solución de retos conceptuales y normativos comunes durante la investigación digital.</p>
+        </div>
+    </div>
+
+    <!-- Slide 7: Casos de Estudio en Referenciación -->
+    <div class="slide-container" id="slide7">
+        <h2 class="slide-title"><i class="fa-solid fa-folder-open"></i> Casos de Estudio en Referenciación</h2>
+        <div class="content-area">
+            <div class="tiled-content">
+                <div class="tile" style="border-top: 4px solid var(--accent-amber);">
+                    <div class="icon" style="color: var(--accent-amber);"><i class="fa-solid fa-calendar-xmark"></i></div>
+                    <h3>Caso 1: Sin Fecha (s.f.)</h3>
+                    <p>Si la página web carece de año visible, se sustituye la fecha por la abreviatura obligatoria <strong>(s.f.)</strong> en la cita y referencia.</p>
+                </div>
+                <div class="tile" style="border-top: 4px solid var(--accent-blue);">
+                    <div class="icon"><i class="fa-solid fa-fingerprint"></i></div>
+                    <h3>Caso 2: DOI vs. URL</h3>
+                    <p>El <strong>DOI</strong> es un identificador permanente y único para artículos académicos, inmune a enlaces rotos o URLs cambiantes.</p>
+                </div>
+                <div class="tile" style="border-top: 4px solid var(--accent-cyan);">
+                    <div class="icon"><i class="fa-solid fa-align-left"></i></div>
+                    <h3>Caso 3: Reglas Visuales</h3>
+                    <p>Se exige <strong>orden alfabético</strong> por apellido del autor y aplicación de <strong>sangría francesa</strong> en cada entrada bibliográfica.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Pasos para Automatizar en Google Docs y Word -->
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title"><i class="fa-solid fa-diagram-project"></i> Pasos para Automatizar en Google Docs y Word</h2>
+        <div class="content-area">
+            <div class="timeline-layout">
+                <div class="timeline-step">
+                    <div class="step-number">1</div>
+                    <h3>Paso 1</h3>
+                    <p>Accede a <strong>Herramientas &gt; Citas</strong> (Docs) o la pestaña <strong>Referencias</strong> (Word).</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">2</div>
+                    <h3>Paso 2</h3>
+                    <p>Selecciona la norma internacional <strong>APA (7.ª Edición)</strong> como estándar de trabajo.</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">3</div>
+                    <h3>Paso 3</h3>
+                    <p>Completa el formulario de la fuente (Autor, Año, Título, Sitio web/Revista y URL/DOI).</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">4</div>
+                    <h3>Paso 4</h3>
+                    <p>Haz clic en <strong>Insertar referencias</strong> para generar la lista ordenada con sangría francesa.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Sección 4: Ética e Integridad -->
+    <div class="slide-container" id="slide9">
+        <h2 class="slide-title"><i class="fa-solid fa-shield-halved"></i> Sección 4: Ética e Integridad</h2>
+        <div class="content-area">
+            <div class="two-column" style="grid-template-columns: 1fr 1fr;">
+                <div class="tile" style="justify-content: center; background: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--accent-purple);">
+                    <div class="icon" style="color: var(--accent-purple);"><i class="fa-solid fa-award"></i></div>
+                    <h3>Profesionalismo e Identidad</h3>
+                    <p style="font-size: 17px; line-height: 1.6; margin-top: 10px;">Citar adecuadamente respeta la propiedad intelectual, refuerza tus argumentos y proyecta una marca personal de excelencia académica.</p>
+                </div>
+                <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); border-radius: 14px; padding: 35px; display: flex; flex-direction: column; justify-content: center; text-align: center; position: relative;">
+                    <i class="fa-solid fa-quote-left" style="font-size: 36px; color: rgba(59, 130, 246, 0.3); position: absolute; top: 20px; left: 20px;"></i>
+                    <p style="font-size: 22px; font-weight: 600; color: #f1f5f9; font-style: italic; line-height: 1.5; z-index: 1;">
+                        "El rigor en la referenciación bibliográfica distingue a un simple aficionado de un auténtico investigador e informático profesional."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Ponderación y Rúbrica -->
+    <div class="slide-container" id="slide10">
+        <h2 class="slide-title"><i class="fa-solid fa-clipboard-check"></i> Ponderación y Rúbrica (10 Puntos)</h2>
+        <div class="content-area">
+            <div class="two-column" style="grid-template-columns: 0.8fr 1.2fr;">
+                <div class="metric-card">
+                    <div class="metric-number">10</div>
+                    <div class="metric-label">Puntos Totales</div>
+                </div>
+                <div>
+                    <ul class="styled-bullets">
+                        <li>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <div>
+                                <strong>Fase Manual (3 pts):</strong> Desglose correcto de fórmulas APA 7 en el cuaderno de trabajo.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-desktop"></i>
+                            <div>
+                                <strong>Fase Automatizada (4 pts):</strong> Registro en gestor de citas e inserción de bibliografía con sangría francesa.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <div>
+                                <strong>Casos y Ética (3 pts):</strong> Resolución correcta de casos de estudio y reflexión escrita.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: ¿Listos para Comenzar? -->
+    <div class="slide-container" id="slide11">
+        <div class="section-title-layout">
+            <div class="title-badge"><i class="fa-solid fa-play"></i> Sesión Práctica</div>
+            <h2>¿Listos para Comenzar?</h2>
+            <div class="section-divider"></div>
+            <p>Abre tu procesador de texto y comencemos la actividad de laboratorio.</p>
+            <div style="margin-top:40px; color:var(--text-dim); font-size:18px; font-weight:600;">
+                Colegio de Informática "Justo Rufino Bautista" | Ciclo 2026
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Deck Controls Footer Bar -->
+<div class="deck-controls">
+    <button class="nav-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+    <div class="counter-badge" id="slideCounter">Diapositiva 1 / 11</div>
+    <div style="display:flex; gap:10px;">
+        <button class="nav-btn" id="fullscreenBtn"><i class="fa-solid fa-expand"></i> Pantalla Completa</button>
+        <button class="nav-btn" id="nextBtn">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<!-- Teacher Notes Bar -->
+<div class="teacher-notes-panel">
+    <i class="fa-solid fa-note-sticky"></i>
+    <div>
+        <div class="teacher-notes-label">Notas del Docente</div>
+        <div class="teacher-notes-content" id="teacherNotesText">
+            Bienvenida e introducción al tema de estructuración de fuentes y bibliografías formales.
+        </div>
+    </div>
+</div>
+
+<script>
+    // Teacher notes database per slide
+    const teacherNotes = [
+        "Bienvenida e introducción al tema de estructuración de fuentes y bibliografías formales.",
+        "Lectura guiada del indicador de logro para contextualizar los aprendizajes esperados según el CNB.",
+        "Activar conocimientos previos sobre evaluación de fuentes en internet y el error común de pegar solo el link.",
+        "Explicar la distribución de las fases del taller práctico de laboratorio (fase manual e inserción de la automatización).",
+        "Analizar la estructura formal de cada fórmula APA 7 y su aplicación a diferentes tipos de publicación.",
+        "Introducción a la sección 3 para resolver problemas habituales al encontrar fuentes académicas en la web.",
+        "Discutir los casos especiales como la ausencia de fecha, la diferencia entre DOI y URL, y las reglas visuales.",
+        "Demostración en vivo en pantalla de cómo ingresar a las herramientas de Citas en Google Docs y MS Word.",
+        "Reflexionar sobre el impacto ético de citar adecuadamente en la identidad y marca profesional del estudiante.",
+        "Explicar los criterios de evaluación detallados en la rúbrica sobre los 10 puntos totales de la actividad.",
+        "Indicaciones finales para iniciar el trabajo individual en las estaciones de laboratorio."
+    ];
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slideCounter');
+    const teacherNotesText = document.getElementById('teacherNotesText');
+
+    function updateDeck() {
+        slides.forEach((slide, idx) => {
+            if (idx === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        slideCounter.textContent = `Diapositiva ${currentSlide + 1} / ${totalSlides}`;
+        teacherNotesText.textContent = teacherNotes[currentSlide] || "Sin notas para esta diapositiva.";
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateDeck();
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateDeck();
+        }
+    });
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateDeck();
+            }
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateDeck();
+            }
+        }
+    });
+
+    // Fullscreen Toggle
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
+</script>
+</body>
+</html>
