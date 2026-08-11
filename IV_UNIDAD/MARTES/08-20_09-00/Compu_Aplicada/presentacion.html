@@ -1,11 +1,1008 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>Computación Aplicada | III Unidad</title>
-<style>
-body{margin:0;background:#06162b;color:#eaf7ff;font-family:Arial;text-align:center}
-main{max-width:900px;margin:12vh auto;padding:40px;border:1px solid #1be7ff;border-radius:18px;background:#0a2340;box-shadow:0 0 30px #00d9ff33}
-h1{color:#ffe600} .btn{display:inline-block;margin-top:20px;padding:12px 20px;border-radius:10px;background:#ffe600;color:#06162b;text-decoration:none;font-weight:bold}
-</style></head><body><main><div style="font-size:52px">💻</div>
-<h1>Computación Aplicada</h1><h2>III Unidad · 2026</h2>
-<p>Plantilla de presentación. Reemplaza este archivo por la presentación HTML generada para la clase.</p>
-<a class="btn" href="../../../../../../index.html">← Volver al índice</a>
-</main></body></html>
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Interactivo UX - Usabilidad Web y Heurísticas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-500 selection:text-white min-h-screen flex flex-col">
+
+    <!-- Encabezado Superior / Top Header -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md bg-slate-900/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-600 text-white p-2 rounded-xl shadow-lg shadow-brand-500/30 flex items-center justify-center">
+                    <i class="fa-solid fa-swatchbook text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg leading-tight flex items-center gap-2">
+                        Usabilidad Web & UX
+                        <span class="bg-brand-500/20 text-brand-300 text-xs px-2 py-0.5 rounded-full border border-brand-500/30">Interactive Edition</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 hidden sm:block">4to. Bachillerato en Computación - IV Unidad</p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+                <button onclick="switchTab('tab-ux-intro')" class="nav-btn px-3 py-2 rounded-lg transition hover:bg-slate-800 text-slate-300 hover:text-white active-tab-btn" id="btn-tab-ux-intro">
+                    <i class="fa-solid fa-compass mr-1.5 text-brand-400"></i>UX vs UI
+                </button>
+                <button onclick="switchTab('tab-heuristics')" class="nav-btn px-3 py-2 rounded-lg transition hover:bg-slate-800 text-slate-300 hover:text-white" id="btn-tab-heuristics">
+                    <i class="fa-solid fa-list-check mr-1.5 text-brand-400"></i>10 Heurísticas
+                </button>
+                <button onclick="switchTab('tab-accessibility')" class="nav-btn px-3 py-2 rounded-lg transition hover:bg-slate-800 text-slate-300 hover:text-white" id="btn-tab-accessibility">
+                    <i class="fa-solid fa-universal-access mr-1.5 text-brand-400"></i>WCAG & Contraste
+                </button>
+                <button onclick="switchTab('tab-audit')" class="nav-btn px-3 py-2 rounded-lg transition hover:bg-slate-800 text-slate-300 hover:text-white" id="btn-tab-audit">
+                    <i class="fa-solid fa-clipboard-check mr-1.5 text-emerald-400"></i>Auditoría UX
+                </button>
+                <button onclick="switchTab('tab-quiz')" class="nav-btn px-3 py-2 rounded-lg transition hover:bg-slate-800 text-slate-300 hover:text-white" id="btn-tab-quiz">
+                    <i class="fa-solid fa-brain mr-1.5 text-amber-400"></i>Evaluación
+                </button>
+            </nav>
+
+            <!-- Menú Móvil Botón -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white p-2 rounded-lg hover:bg-slate-800">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Menú desplegable Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('tab-ux-intro'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-compass mr-2 text-brand-400 w-5"></i>1. Introducción UX vs UI
+            </button>
+            <button onclick="switchTab('tab-heuristics'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-list-check mr-2 text-brand-400 w-5"></i>2. Las 10 Heurísticas de Nielsen
+            </button>
+            <button onclick="switchTab('tab-accessibility'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-universal-access mr-2 text-brand-400 w-5"></i>3. Accesibilidad y Calculadora WCAG
+            </button>
+            <button onclick="switchTab('tab-audit'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-clipboard-check mr-2 text-emerald-400 w-5"></i>4. Auditoría UX (Lista de Cotejo)
+            </button>
+            <button onclick="switchTab('tab-quiz'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-200 hover:bg-slate-800 flex items-center">
+                <i class="fa-solid fa-brain mr-2 text-amber-400 w-5"></i>5. Quiz Interactivo de Repaso
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-8 border-b border-slate-800 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/30 mb-3">
+                        <i class="fa-solid fa-graduation-cap"></i> Material Técnico Educativo
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Experiencia de Usuario (UX) & Evaluaciones Heurísticas</h2>
+                    <p class="text-slate-300 mt-2 max-w-2xl text-sm sm:text-base leading-relaxed">
+                        Aprende a diseñar interfaces web intuitivas, accesibles y profesionales siguiendo los estándares WCAG y las 10 heurísticas de Jakob Nielsen para la revisión por pares.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <div class="bg-slate-800/80 backdrop-blur border border-slate-700/60 p-3 rounded-xl flex items-center gap-3">
+                        <div class="text-emerald-400 text-2xl"><i class="fa-solid fa-award"></i></div>
+                        <div>
+                            <div class="text-xs text-slate-400">Objetivo</div>
+                            <div class="text-xs font-bold text-white">Diseño Centrado en el Usuario</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/80 backdrop-blur border border-slate-700/60 p-3 rounded-xl flex items-center gap-3">
+                        <div class="text-brand-400 text-2xl"><i class="fa-solid fa-laptop-code"></i></div>
+                        <div>
+                            <div class="text-xs text-slate-400">Práctica</div>
+                            <div class="text-xs font-bold text-white">Auditoría de Portafolio Web</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA WITH TABS -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+        <!-- TAB 1: UX VS UI -->
+        <section id="tab-ux-intro" class="tab-content space-y-8">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="max-w-3xl">
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-brand-600"></i>
+                        1. Experiencia de Usuario (UX) vs. Interfaz de Usuario (UI)
+                    </h3>
+                    <p class="text-slate-600 mt-2 text-sm sm:text-base leading-relaxed">
+                        Es común confundir <strong class="font-semibold text-slate-800">UX</strong> y <strong class="font-semibold text-slate-800">UI</strong>, pero responden a aspectos distintos del desarrollo de software. Imagina un vehículo: el motor, la comodidad del asiento y la facilidad de conducción representan la UX, mientras que la pintura, la forma de los faros y los acabados cromados representan la UI.
+                    </p>
+                </div>
+
+                <!-- Comparativa interactiva -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <!-- Tarjeta UX -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-200 rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-brand-700 text-7xl font-extrabold group-hover:scale-110 transition duration-300">UX</div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-600 text-white rounded-lg font-bold text-xs mb-4">
+                            <i class="fa-solid fa-brain"></i> User Experience (UX)
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Sintió, Funcionó & Resolvió</h4>
+                        <p class="text-slate-600 text-sm mb-4">
+                            Se enfoca en la <strong class="font-semibold text-slate-800">usabilidad</strong>, la arquitectura de información, la lógica de navegación y en garantizar que el usuario cumpla sus tareas sin frustración.
+                        </p>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600 text-xs"></i> ¿Es fácil encontrar los proyectos en el portafolio?</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600 text-xs"></i> ¿Los botones responden como el usuario espera?</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600 text-xs"></i> ¿El flujo de envío del formulario de contacto funciona sin rodeos?</li>
+                        </ul>
+                    </div>
+
+                    <!-- Tarjeta UI -->
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-purple-700 text-7xl font-extrabold group-hover:scale-110 transition duration-300">UI</div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-600 text-white rounded-lg font-bold text-xs mb-4">
+                            <i class="fa-solid fa-palette"></i> User Interface (UI)
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Visual, Estético & Atractivo</h4>
+                        <p class="text-slate-600 text-sm mb-4">
+                            Se enfoca en el <strong class="font-semibold text-slate-800">aspecto gráfico</strong>, la selección de la paleta de colores, la tipografía, los espacios en blanco, bordes redondeados e íconos.
+                        </p>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600 text-xs"></i> ¿La paleta de colores se ve moderna y consistente?</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600 text-xs"></i> ¿Los íconos combinan con el estilo visual general?</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600 text-xs"></i> ¿Las tipografías de los títulos tienen la jerarquía adecuada?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Demostración interactiva de los 3 clics -->
+                <div class="mt-8 bg-slate-900 text-white p-6 rounded-2xl">
+                    <h4 class="font-bold text-base sm:text-lg flex items-center gap-2 text-amber-400">
+                        <i class="fa-solid fa-lightbulb"></i> Regla de Usabilidad: La Eficiencia de Navegación
+                    </h4>
+                    <p class="text-slate-300 text-sm mt-1">
+                        Un reclutador o cliente no debe tardar más de <strong class="font-bold text-amber-300">2 a 3 clics</strong> en encontrar tu información de contacto o la demostración técnica de tus proyectos en tu portafolio.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                        <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-600 font-bold flex items-center justify-center shrink-0">1</div>
+                            <div class="text-xs">
+                                <span class="font-bold block text-slate-200">Clic 1: Página de Inicio</span>
+                                <span class="text-slate-400">Accede al Portafolio</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-600 font-bold flex items-center justify-center shrink-0">2</div>
+                            <div class="text-xs">
+                                <span class="font-bold block text-slate-200">Clic 2: Sección Proyectos</span>
+                                <span class="text-slate-400">Abre un proyecto interactivo</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-emerald-600 font-bold flex items-center justify-center shrink-0">3</div>
+                            <div class="text-xs">
+                                <span class="font-bold block text-slate-200">Clic 3: Contacto Directo</span>
+                                <span class="text-slate-400">Envía mensaje o correo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: LAS 10 HEURÍSTICAS DE NIELSEN -->
+        <section id="tab-heuristics" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-brand-600"></i>
+                            Las 10 Heurísticas de Jakob Nielsen
+                        </h3>
+                        <p class="text-slate-600 text-sm mt-1">
+                            Haz clic en cada regla para desplegar el ejemplo técnico aplicado a un sitio web o portafolio.
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="expandAllHeuristics()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition">
+                            Expandir Todo
+                        </button>
+                        <button onclick="collapseAllHeuristics()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition">
+                            Colapsar Todo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid de Heurísticas -->
+                <div id="heuristics-container" class="space-y-4 mt-6">
+                    <!-- Heurística 1 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(1)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+                                Visibilidad del estado del sistema
+                            </span>
+                            <i id="icon-h-1" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-1" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">El sitio web debe mantener siempre informado al usuario de lo que está sucediendo a través de retroalimentación oportuna.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Un botón de "Enviar Formulario" cambia de estado a "Enviando..." con un pequeño spinner de carga al hacer clic.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">El usuario hace clic en el botón y la pantalla no cambia ni da señal de vida, provocando que vuelva a presionar varias veces.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 2 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(2)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+                                Coincidencia entre el sistema y el mundo real
+                            </span>
+                            <i id="icon-h-2" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-2" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Usar palabras, frases e íconos familiares para el usuario en lugar de terminología técnica de programación.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Usar un ícono de sobre para "Contacto" o un ícono de portafolio/carpeta para "Proyectos".</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Etiquetar un botón con términos crípticos como "GET_API_DATA_CONTROLLER" o rutas de servidor.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 3 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(3)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">3</span>
+                                Control y libertad del usuario
+                            </span>
+                            <i id="icon-h-3" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-3" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Ofrecer "salidas de emergencia" claras cuando el usuario realiza una acción por error.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Botón emergente para cerrar modales ('X') o un enlace flotante "Volver arriba" al scrollear.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Ventanas emergentes modales sin botón visible para cerrar que obligan a recargar toda la página.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 4 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(4)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">4</span>
+                                Consistencia y estándares
+                            </span>
+                            <i id="icon-h-4" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-4" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Seguir convenciones de diseño web ampliamente aceptadas en la industria.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Ubicación del menú principal en el borde superior o header, y pie de página en el footer.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Colocar el menú de navegación escondido en la esquina inferior derecha sin indicación alguna.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 5 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(5)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">5</span>
+                                Prevención de errores
+                            </span>
+                            <i id="icon-h-5" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-5" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Prevenir la ocurrencia de un error antes de que el usuario envíe información errónea.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Validar campos requeridos en tiempo real e impedir el envío si el correo no tiene formato válido (@).</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Permitir enviar un formulario vacío y borrar todos los datos ingresados al recargar.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 6 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(6)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">6</span>
+                                Reconocimiento antes que recuerdo
+                            </span>
+                            <i id="icon-h-6" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-6" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Reducir la carga cognitiva haciendo visibles las opciones e instrucciones.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Menús de navegación visibles en todo momento e íconos acompañados de etiquetas textuales.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Obligar al usuario a recordar nombres de páginas o códigos para poder ingresar a una subsección.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 7 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(7)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">7</span>
+                                Flexibilidad y eficiencia de uso
+                            </span>
+                            <i id="icon-h-7" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-7" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Ofrecer atajos de teclado o filtros rápidos para usuarios experimentados.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Permitir la navegación rápida por teclado con la tecla Tab o un buscador por categoría de proyectos.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Páginas rígidas que no responden al enfoque de teclado ni permiten búsquedas sencillas.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 8 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(8)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">8</span>
+                                Estética y diseño minimalista
+                            </span>
+                            <i id="icon-h-8" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-8" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Eliminar información o elementos visuales redundantes que compitan con el contenido importante.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Espacio en blanco equilibrado, párrafos cortos y títulos bien definidos.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Saturar la pantalla con GIFs animados, demasiados colores estridentes y bloques de texto masivo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 9 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(9)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">9</span>
+                                Reconocer, diagnosticar y recuperarse de errores
+                            </span>
+                            <i id="icon-h-9" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-9" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Los mensajes de error deben expresarse en lenguaje claro e indicar la solución de manera constructiva.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">"Ingresa un correo válido (ejemplo: nombre@dominio.com)" con borde rojo tenue.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Mostrar mensajes crípticos del servidor como "Fatal Error 0x8004005 System Failure".</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heurística 10 -->
+                    <div class="heuristic-card border border-slate-200 rounded-xl overflow-hidden transition bg-white shadow-xs">
+                        <button onclick="toggleHeuristic(10)" class="w-full p-4 text-left font-bold text-slate-800 bg-slate-50 hover:bg-indigo-50/50 flex items-center justify-between transition">
+                            <span class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center">10</span>
+                                Ayuda y documentación
+                            </span>
+                            <i id="icon-h-10" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                        </button>
+                        <div id="content-h-10" class="hidden p-5 border-t border-slate-200 space-y-3 bg-white text-sm">
+                            <p class="text-slate-600">Ofrecer guías o pequeñas explicaciones contextuales para tareas complejas.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                                    <span class="font-bold text-emerald-800 block mb-1 text-xs"><i class="fa-solid fa-check-circle mr-1"></i> Buena Práctica</span>
+                                    <p class="text-xs text-emerald-950">Un pequeño tooltip explicativo sobre cómo probar una demo en vivo de un proyecto.</p>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded-lg">
+                                    <span class="font-bold text-rose-800 block mb-1 text-xs"><i class="fa-solid fa-xmark-circle mr-1"></i> Mala Práctica</span>
+                                    <p class="text-xs text-rose-950">Asumir que todos los visitantes conocen de antemano el funcionamiento interno de tu app.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: ACCESIBILIDAD Y CONTRASTE DE COLOR -->
+        <section id="tab-accessibility" class="tab-content hidden space-y-8">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-universal-access text-brand-600"></i>
+                    3. Accesibilidad Web (WCAG) & Inspector de Contraste
+                </h3>
+                <p class="text-slate-600 text-sm sm:text-base mt-2">
+                    Las pautas <strong class="font-semibold text-slate-800">WCAG 2.1</strong> establecen que el texto principal debe tener un contraste mínimo de <strong class="font-semibold text-slate-800">4.5:1</strong> respecto a su fondo para garantizar que personas con deficiencias visuales puedan leer el contenido sin fatiga.
+                </p>
+
+                <!-- Calculadora Interactiva de Contraste -->
+                <div class="mt-6 bg-slate-900 rounded-2xl p-6 text-white border border-slate-800">
+                    <h4 class="font-bold text-lg text-emerald-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> Herramienta Interactiva: Verificador de Contraste en Tiempo Real
+                    </h4>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <!-- Selectores de color -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Color de Texto</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="color" id="textColor" value="#1e293b" oninput="calculateContrast()" class="w-10 h-10 rounded-lg cursor-pointer bg-slate-800 border-0 p-1">
+                                    <input type="text" id="textColorHex" value="#1e293b" oninput="updateColorFromInput('text')" class="bg-slate-800 text-white font-mono text-sm px-3 py-2 rounded-lg border border-slate-700 w-full">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Color de Fondo</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="color" id="bgColor" value="#ffffff" oninput="calculateContrast()" class="w-10 h-10 rounded-lg cursor-pointer bg-slate-800 border-0 p-1">
+                                    <input type="text" id="bgColorHex" value="#ffffff" oninput="updateColorFromInput('bg')" class="bg-slate-800 text-white font-mono text-sm px-3 py-2 rounded-lg border border-slate-700 w-full">
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button onclick="setColors('#000000', '#ffffff')" class="text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md">Negro / Blanco</button>
+                                <button onclick="setColors('#64748b', '#ffffff')" class="text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md">Gris / Blanco</button>
+                                <button onclick="setColors('#fbbf24', '#ffffff')" class="text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md">Amarillo / Blanco</button>
+                            </div>
+                        </div>
+
+                        <!-- Previsualización -->
+                        <div class="lg:col-span-7 space-y-4">
+                            <div id="previewBox" class="p-6 rounded-xl border-2 border-slate-700 transition-all text-center flex flex-col justify-center items-center min-h-[140px]" style="background-color: #ffffff; color: #1e293b;">
+                                <span class="font-bold text-lg sm:text-xl">Texto de Ejemplo para Portafolio</span>
+                                <span class="text-xs mt-1 opacity-80">Este es un subtítulo o descripción técnica a 16px.</span>
+                            </div>
+
+                            <!-- Resultados de WCAG -->
+                            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-wrap items-center justify-between gap-4">
+                                <div>
+                                    <span class="text-xs text-slate-400 block">Ratio de Contraste Calculado:</span>
+                                    <span id="contrastRatio" class="text-2xl font-black font-mono text-white">21.0 : 1</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div id="badgeAA" class="px-3 py-1.5 rounded-lg font-bold text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                        WCAG AA: Pasa ✓
+                                    </div>
+                                    <div id="badgeAAA" class="px-3 py-1.5 rounded-lg font-bold text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                        WCAG AAA: Pasa ✓
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buenas Prácticas de Estructura Semántica HTML -->
+                <div class="mt-8 border-t border-slate-200 pt-6">
+                    <h4 class="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-code text-indigo-600"></i> Estructura Semántica HTML5
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto leading-relaxed border border-slate-800">
+                            <span class="text-slate-500">&lt;!-- Estructura Semántica Accesible --&gt;</span><br>
+                            <span class="text-purple-400">&lt;header&gt;</span><br>
+                            &nbsp;&nbsp;<span class="text-blue-400">&lt;nav&gt;</span>Enlace 1, Enlace 2<span class="text-blue-400">&lt;/nav&gt;</span><br>
+                            <span class="text-purple-400">&lt;/header&gt;</span><br><br>
+                            <span class="text-purple-400">&lt;main&gt;</span><br>
+                            &nbsp;&nbsp;<span class="text-blue-400">&lt;section&gt;</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">&lt;h1&gt;</span>Mi Portafolio<span class="text-amber-300">&lt;/h1&gt;</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">&lt;img</span> <span class="text-emerald-300">src=</span><span class="text-amber-200">"foto.jpg"</span> <span class="text-emerald-300">alt=</span><span class="text-amber-200">"Foto de perfil de Juan"</span><span class="text-blue-400">&gt;</span><br>
+                            &nbsp;&nbsp;<span class="text-blue-400">&lt;/section&gt;</span><br>
+                            <span class="text-purple-400">&lt;/main&gt;</span>
+                        </div>
+                        <div class="space-y-3 text-sm text-slate-600">
+                            <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-image text-brand-600 mt-1"></i>
+                                <div>
+                                    <strong class="text-slate-800 block text-xs">Atributo ALT en Imágenes:</strong>
+                                    Permite a los lectores de pantalla explicar qué muestra la imagen a usuarios con discapacidad visual.
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-heading text-brand-600 mt-1"></i>
+                                <div>
+                                    <strong class="text-slate-800 block text-xs">Jerarquía de Encabezados (&lt;h1&gt; a &lt;h6&gt;):</strong>
+                                    Organiza el contenido de forma estructurada. Nunca saltes de &lt;h1&gt; a &lt;h4&gt; directamente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: AUDITORÍA UX INTERACTIVA (LISTA DE COTEJO) -->
+        <section id="tab-audit" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-2">
+                            <i class="fa-solid fa-flask"></i> Herramienta para Laboratorio
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900">
+                            Auditoría de Usabilidad UX (Evaluación por Pares)
+                        </h3>
+                        <p class="text-slate-600 text-sm mt-1">
+                            Evalúa el sitio web de tu compañero marcando los criterios. La plataforma calculará el punteado de usabilidad automáticamente.
+                        </p>
+                    </div>
+
+                    <!-- Datos del Evaluador -->
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-wrap gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-500 font-medium">Estudiante Evaluado:</label>
+                            <input type="text" id="evalTarget" placeholder="Nombre del compañero" class="bg-white border border-slate-300 rounded px-2 py-1 mt-0.5 text-xs font-bold text-slate-800 focus:outline-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-slate-500 font-medium">URL / Sitio Web:</label>
+                            <input type="text" id="evalUrl" placeholder="http://127.0.0.1:5500" class="bg-white border border-slate-300 rounded px-2 py-1 mt-0.5 text-xs font-mono text-slate-800 focus:outline-brand-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Progreso / Punteado -->
+                <div class="mt-6 bg-slate-900 text-white p-5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs text-slate-400 block">Puntaje de Usabilidad Obtenido:</span>
+                        <div class="flex items-baseline gap-2">
+                            <span id="auditScore" class="text-3xl font-black text-emerald-400 font-mono">0 / 6</span>
+                            <span id="auditPercentage" class="text-xs font-bold text-slate-300">(0%)</span>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-1/2">
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
+                            <div id="auditProgressBar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Cotejo Checkbox items -->
+                <div class="mt-6 space-y-3">
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="updateAuditScore()" class="audit-item w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 mt-0.5">
+                        <div class="text-sm">
+                            <strong class="text-slate-900 block font-semibold">1. Navegación sin Errores</strong>
+                            <span class="text-slate-500 text-xs">Todos los hipervínculos internos y externos funcionan correctamente (0 enlaces rotos o páginas incompletas).</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="updateAuditScore()" class="audit-item w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 mt-0.5">
+                        <div class="text-sm">
+                            <strong class="text-slate-900 block font-semibold">2. Diseño Adaptable (Responsive)</strong>
+                            <span class="text-slate-500 text-xs">El sitio web se ajusta sin desbordamientos ni barras de desplazamiento horizontal molestas en móviles.</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="updateAuditScore()" class="audit-item w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 mt-0.5">
+                        <div class="text-sm">
+                            <strong class="text-slate-900 block font-semibold">3. Contraste y Legibilidad Mínima</strong>
+                            <span class="text-slate-500 text-xs">Los textos principales se leen sin esfuerzo (alto contraste respecto al fondo y tipografía mayor a 16px).</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="updateAuditScore()" class="audit-item w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 mt-0.5">
+                        <div class="text-sm">
+                            <strong class="text-slate-900 block font-semibold">4. Estructura Semántica HTML</strong>
+                            <span class="text-slate-500 text-xs">Uso adecuado de las etiquetas &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt; y &lt;footer&gt;.</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="updateAuditScore()" class="audit-item w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 mt-0.5">
+                        <div class="text-sm">
+                            <strong class="text-slate-900 block font-semibold">5. Imágenes Accesibles (Atributo alt)</strong>
+                            <span class="text-slate-500 text-xs">Todas las imágenes representativas o de proyectos incluyen descripciones alternativas descriptivas.</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                        <input type="checkbox" onchange="updateAuditScore()" class="audit-item w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 mt-0.5">
+                        <div class="text-sm">
+                            <strong class="text-slate-900 block font-semibold">6. Formulario de Contacto & Feedback</strong>
+                            <span class="text-slate-500 text-xs">Los campos poseen etiquetas &lt;label&gt;, validación visual y botón de acción con estado claro.</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Campo de Observaciones Generador -->
+                <div class="mt-6 space-y-3">
+                    <label class="block font-bold text-sm text-slate-800">Observaciones Técnicas y Recomendaciones de Mejora:</label>
+                    <textarea id="auditComments" rows="3" placeholder="Ejemplo: Se sugiere aumentar el tamaño del menú en dispositivos móviles y corregir el contraste del texto secundario..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex flex-wrap gap-3 mt-4">
+                    <button onclick="copyAuditReport()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-copy"></i> Copiar Resumen de Evaluación para Cuaderno
+                    </button>
+                    <span id="copyNotice" class="text-xs text-emerald-600 font-bold self-center hidden">
+                        ✓ ¡Copiado al portapapeles!
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: QUIZ INTERACTIVO -->
+        <section id="tab-quiz" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="max-w-2xl">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 mb-2">
+                        <i class="fa-solid fa-brain"></i> Autoevaluación
+                    </span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900">
+                        Cuestionario de Comprensión UX / WCAG
+                    </h3>
+                    <p class="text-slate-600 text-sm mt-1">
+                        Ponte a prueba respondiendo estas 4 preguntas clave sobre usabilidad web antes de redactar tus respuestas en el cuaderno.
+                    </p>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container" class="mt-6 space-y-6">
+                    <!-- Pregunta 1 -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-sm text-slate-900">1. ¿Qué establece la regla de "Visibilidad del Estado del Sistema"?</h4>
+                        <div class="space-y-2">
+                            <button onclick="checkQuiz(1, 'A', false, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                A) El código fuente HTML debe estar visible públicamente en GitHub.
+                            </button>
+                            <button onclick="checkQuiz(1, 'B', true, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                B) El sitio debe mantener informado al usuario de lo que sucede con retroalimentación inmediata (ej. spinner de carga).
+                            </button>
+                            <button onclick="checkQuiz(1, 'C', false, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                C) El diseño debe usar únicamente fondos oscuros para ahorrar batería.
+                            </button>
+                        </div>
+                        <div id="feedback-q1" class="hidden text-xs font-bold p-2.5 rounded-lg mt-2"></div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-sm text-slate-900">2. Según la WCAG 2.1, ¿cuál es el contraste mínimo recomendado para texto principal?</h4>
+                        <div class="space-y-2">
+                            <button onclick="checkQuiz(2, 'A', false, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                A) 2.0 : 1
+                            </button>
+                            <button onclick="checkQuiz(2, 'B', true, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                B) 4.5 : 1
+                            </button>
+                            <button onclick="checkQuiz(2, 'C', false, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                C) 10.0 : 1
+                            </button>
+                        </div>
+                        <div id="feedback-q2" class="hidden text-xs font-bold p-2.5 rounded-lg mt-2"></div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-sm text-slate-900">3. ¿Cuál de los siguientes comentarios se considera una retroalimentación TÉCNICA Y ACCIONABLE?</h4>
+                        <div class="space-y-2">
+                            <button onclick="checkQuiz(3, 'A', false, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                A) "Tu sitio no me gusta, los colores se ven feos."
+                            </button>
+                            <button onclick="checkQuiz(3, 'B', true, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                B) "El texto secundario en gris claro sobre fondo blanco no cumple con el contraste mínimo. Recomiendo usar un tono de gris más oscuro para legibilidad."
+                            </button>
+                            <button onclick="checkQuiz(3, 'C', false, this)" class="w-full text-left p-3 bg-white border border-slate-200 rounded-lg text-xs hover:bg-slate-100 transition">
+                                C) "Todo está perfecto, no le cambies nada."
+                            </button>
+                        </div>
+                        <div id="feedback-q3" class="hidden text-xs font-bold p-2.5 rounded-lg mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 text-xs mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+            <p>© 2026 Colegio de Informática Justo Rufino Bautista — IV Unidad</p>
+            <p class="text-slate-500">Curso: Desarrollo Web / Computación | Grado: 4to. Bachillerato en Ciencias y Letras con Orientación en Computación</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            // Ocultar todos los contenidos de pestaña
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Remover estado activo de botones
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+                btn.classList.add('text-slate-300');
+            });
+
+            // Mostrar la pestaña seleccionada
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) {
+                activeTab.classList.remove('hidden');
+            }
+
+            // Activar el botón correspondiente
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-slate-800', 'text-white');
+                activeBtn.classList.remove('text-slate-300');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleHeuristic(id) {
+            const content = document.getElementById(`content-h-${id}`);
+            const icon = document.getElementById(`icon-h-${id}`);
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        function expandAllHeuristics() {
+            for (let i = 1; i <= 10; i++) {
+                const content = document.getElementById(`content-h-${i}`);
+                const icon = document.getElementById(`icon-h-${i}`);
+                if (content && icon) {
+                    content.classList.remove('hidden');
+                    icon.classList.add('rotate-180');
+                }
+            }
+        }
+
+        function collapseAllHeuristics() {
+            for (let i = 1; i <= 10; i++) {
+                const content = document.getElementById(`content-h-${i}`);
+                const icon = document.getElementById(`icon-h-${i}`);
+                if (content && icon) {
+                    content.classList.add('hidden');
+                    icon.classList.remove('rotate-180');
+                }
+            }
+        }
+
+        function getLuminance(hex) {
+            const rgb = parseInt(hex.slice(1), 16);
+            const r = (rgb >> 16) & 0xff;
+            const g = (rgb >>  8) & 0xff;
+            const b = (rgb >>  0) & 0xff;
+
+            const a = [r, g, b].map(v => {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+
+            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+
+        function calculateContrast() {
+            const textColor = document.getElementById('textColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+
+            document.getElementById('textColorHex').value = textColor;
+            document.getElementById('bgColorHex').value = bgColor;
+
+            const preview = document.getElementById('previewBox');
+            preview.style.backgroundColor = bgColor;
+            preview.style.color = textColor;
+
+            const lum1 = getLuminance(textColor);
+            const lum2 = getLuminance(bgColor);
+            const ratio = (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
+
+            const ratioFormatted = ratio.toFixed(1);
+            document.getElementById('contrastRatio').innerText = `${ratioFormatted} : 1`;
+
+            const badgeAA = document.getElementById('badgeAA');
+            const badgeAAA = document.getElementById('badgeAAA');
+
+            if (ratio >= 4.5) {
+                badgeAA.className = "px-3 py-1.5 rounded-lg font-bold text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                badgeAA.innerText = "WCAG AA: Pasa ✓";
+            } else {
+                badgeAA.className = "px-3 py-1.5 rounded-lg font-bold text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                badgeAA.innerText = "WCAG AA: Falla ✕";
+            }
+
+            if (ratio >= 7.0) {
+                badgeAAA.className = "px-3 py-1.5 rounded-lg font-bold text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                badgeAAA.innerText = "WCAG AAA: Pasa ✓";
+            } else {
+                badgeAAA.className = "px-3 py-1.5 rounded-lg font-bold text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30";
+                badgeAAA.innerText = "WCAG AAA: Insuficiente";
+            }
+        }
+
+        function setColors(textHex, bgHex) {
+            document.getElementById('textColor').value = textHex;
+            document.getElementById('bgColor').value = bgHex;
+            calculateContrast();
+        }
+
+        function updateColorFromInput(type) {
+            if (type === 'text') {
+                const val = document.getElementById('textColorHex').value;
+                if (/^#[0-9A-F]{6}$/i.test(val)) {
+                    document.getElementById('textColor').value = val;
+                    calculateContrast();
+                }
+            } else {
+                const val = document.getElementById('bgColorHex').value;
+                if (/^#[0-9A-F]{6}$/i.test(val)) {
+                    document.getElementById('bgColor').value = val;
+                    calculateContrast();
+                }
+            }
+        }
+
+        function updateAuditScore() {
+            const checkboxes = document.querySelectorAll('.audit-item');
+            let checkedCount = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+
+            const total = checkboxes.length;
+            const percentage = Math.round((checkedCount / total) * 100);
+
+            document.getElementById('auditScore').innerText = `${checkedCount} / ${total}`;
+            document.getElementById('auditPercentage').innerText = `(${percentage}%)`;
+            document.getElementById('auditProgressBar').style.width = `${percentage}%`;
+        }
+
+        function copyAuditReport() {
+            const target = document.getElementById('evalTarget').value || 'Compañero';
+            const url = document.getElementById('evalUrl').value || 'Localhost';
+            const score = document.getElementById('auditScore').innerText;
+            const comments = document.getElementById('auditComments').value || 'Sin observaciones adicionales.';
+
+            const reportText = `MATRIZ DE AUDITORÍA UX - RETROALIMENTACIÓN
+Evaluado: ${target} (${url})
+Puntuación Obtenida: ${score}
+Observaciones Técnicas: ${comments}`;
+
+            // Copiar utilizando execCommand para máxima compatibilidad iframe
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = reportText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const notice = document.getElementById('copyNotice');
+            notice.classList.remove('hidden');
+            setTimeout(() => {
+                notice.classList.add('hidden');
+            }, 3000);
+        }
+
+        function checkQuiz(questionNum, option, isCorrect, btnElement) {
+            const feedbackEl = document.getElementById(`feedback-q${questionNum}`);
+            feedbackEl.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (isCorrect) {
+                feedbackEl.classList.add('bg-emerald-100', 'text-emerald-800');
+                feedbackEl.innerText = '¡Correcto! Excelente comprensión de la regla técnica.';
+            } else {
+                feedbackEl.classList.add('bg-rose-100', 'text-rose-800');
+                feedbackEl.innerText = 'Incorrecto. Revisa el concepto en las pestañas teóricas.';
+            }
+        }
+
+        // Inicializar al cargar
+        window.onload = function() {
+            calculateContrast();
+            updateAuditScore();
+        };
+    </script>
+</body>
+</html>
