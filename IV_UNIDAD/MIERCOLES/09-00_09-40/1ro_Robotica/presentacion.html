@@ -1,11 +1,1135 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>1ro. Robótica | III Unidad</title>
-<style>
-body{margin:0;background:#06162b;color:#eaf7ff;font-family:Arial;text-align:center}
-main{max-width:900px;margin:12vh auto;padding:40px;border:1px solid #1be7ff;border-radius:18px;background:#0a2340;box-shadow:0 0 30px #00d9ff33}
-h1{color:#ffe600} .btn{display:inline-block;margin-top:20px;padding:12px 20px;border-radius:10px;background:#ffe600;color:#06162b;text-decoration:none;font-weight:bold}
-</style></head><body><main><div style="font-size:52px">🤖</div>
-<h1>1ro. Robótica</h1><h2>III Unidad · 2026</h2>
-<p>Plantilla de presentación. Reemplaza este archivo por la presentación HTML generada para la clase.</p>
-<a class="btn" href="../../../../../../index.html">← Volver al índice</a>
-</main></body></html>
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía No. 6: El Condicional Si-si no y Sensores mBot2</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        mblock: {
+                            hat: '#4a90e2',
+                            control: '#ffab19',
+                            sensing: '#5cb1d6',
+                            looks: '#9966ff',
+                            text: '#ffffff'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap');
+        
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* Scratch/mBlock style blocks */
+        .mblock-control {
+            background-color: #ffab19;
+            border: 2px solid #e69500;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            padding: 8px 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .mblock-sensing {
+            background-color: #5cb1d6;
+            border: 2px solid #4298be;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 10px;
+            display: inline-block;
+        }
+        .mblock-looks {
+            background-color: #9966ff;
+            border: 2px solid #8047e6;
+            color: white;
+            border-radius: 6px;
+            padding: 6px 10px;
+        }
+        
+        /* Flowchart Node Shapes */
+        .fc-start-end {
+            border-radius: 9999px;
+            border: 2px solid #2563eb;
+            background-color: #dbeafe;
+        }
+        .fc-process {
+            border-radius: 8px;
+            border: 2px solid #059669;
+            background-color: #d1fae5;
+        }
+        .fc-decision {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            background-color: #fef3c7;
+            border: 2px solid #d97706;
+            min-width: 140px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans h-full overflow-hidden flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navigation & Controls Bar -->
+    <header class="bg-slate-800/90 border-b border-slate-700/80 px-4 py-2.5 flex items-center justify-between shrink-0 z-20 backdrop-blur-md">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-tr from-brand-600 to-cyan-400 p-2 rounded-xl shadow-lg shadow-brand-500/20">
+                <i data-lucide="bot" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-sm sm:text-base text-slate-100 leading-tight">Guía No. 6: Robótica - 1ro Básico</h1>
+                <p class="text-xs text-brand-400 font-medium">Colegio de Informática Justo Rufino Bautista</p>
+            </div>
+        </div>
+
+        <!-- Center Controls: Slide Counter & Jump -->
+        <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700">
+            <button id="prev-btn-top" onclick="changeSlide(-1)" class="p-1 hover:bg-slate-700 rounded transition text-slate-300 hover:text-white disabled:opacity-30">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <span class="text-xs sm:text-sm font-semibold tracking-wider text-slate-200">
+                <span id="current-slide-num" class="text-brand-400">1</span> / <span id="total-slides-num">10</span>
+            </span>
+            <button id="next-btn-top" onclick="changeSlide(1)" class="p-1 hover:bg-slate-700 rounded transition text-slate-300 hover:text-white disabled:opacity-30">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleOverview()" title="Vista General de Diapositivas" class="p-2 bg-slate-700/60 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-600/50 transition">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i>
+            </button>
+            <button onclick="toggleTeacherNotes()" id="teacher-notes-btn" title="Notas del Docente" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition">
+                <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                <span class="hidden md:inline">Notas Docente</span>
+            </button>
+            <button onclick="toggleFullscreen()" title="Pantalla Completa" class="p-2 bg-slate-700/60 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-600/50 transition">
+                <i data-lucide="maximize" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Indicator Bar -->
+    <div class="w-full bg-slate-800 h-1.5 shrink-0 relative overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-brand-500 via-cyan-400 to-amber-400 h-full w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 relative overflow-y-auto p-4 sm:p-6 lg:p-8 flex justify-center items-center">
+        
+        <!-- SLIDE 1: Title & Overview -->
+        <section class="slide active flex-col justify-center items-center w-full max-w-5xl mx-auto space-y-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs sm:text-sm font-semibold tracking-wide">
+                <i data-lucide="cpu" class="w-4 h-4"></i> IV Unidad — Unidad 7 del Libro
+            </div>
+            
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                El Condicional <span class="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Si-si no</span> y Sensores en <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-brand-500">mBot2</span>
+            </h1>
+
+            <p class="text-slate-300 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Explicación interactiva y desglose detallado de actividades para la <strong class="text-white">Guía de Trabajo No. 6</strong> (Págs. 118 - 121 del Libro de Texto).
+            </p>
+
+            <!-- Info Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mt-6 text-left">
+                <div class="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-2">
+                    <div class="text-brand-400 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i> Asignatura
+                    </div>
+                    <div class="text-lg font-bold text-slate-100">Robótica Educativa</div>
+                    <div class="text-xs text-slate-400">1ro Básico (A, B, C)</div>
+                </div>
+
+                <div class="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-2">
+                    <div class="text-emerald-400 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="award" class="w-4 h-4"></i> Valor Total
+                    </div>
+                    <div class="text-lg font-bold text-slate-100">10 Puntos Netos</div>
+                    <div class="text-xs text-slate-400">4 Secciones Evaluadas</div>
+                </div>
+
+                <div class="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-2">
+                    <div class="text-amber-400 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> Entregables
+                    </div>
+                    <div class="text-lg font-bold text-slate-100">Cuaderno + Libro</div>
+                    <div class="text-xs text-slate-400">Página 121 + Firma Tutor</div>
+                </div>
+            </div>
+
+            <div class="pt-4 flex flex-wrap gap-3 justify-center">
+                <button onclick="changeSlide(1)" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg shadow-brand-600/30 transition flex items-center space-x-2">
+                    <span>Iniciar Presentación</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: Aprendizajes Esperados -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-6">
+            <div>
+                <div class="flex items-center gap-2 text-brand-400 font-semibold text-xs uppercase tracking-wider mb-2">
+                    <i data-lucide="target" class="w-4 h-4"></i> Sección 1. Presentación
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Objetivos y Aprendizajes Esperados</h2>
+                <p class="text-slate-400 text-sm mt-1">¿Qué destrezas desarrollarán los estudiantes al completar esta guía?</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-5 bg-slate-800/60 border border-slate-700/80 rounded-2xl flex items-start gap-4 hover:border-brand-500/50 transition">
+                    <div class="p-3 bg-brand-500/20 text-brand-400 rounded-xl shrink-0">
+                        <i data-lucide="git-fork" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base">Estructuras Condicionales</h3>
+                        <p class="text-sm text-slate-300 mt-1">Comprender el funcionamiento de la lógica <strong class="text-amber-400">Si-si no</strong> para la toma de decisiones autónomas en la programación.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 bg-slate-800/60 border border-slate-700/80 rounded-2xl flex items-start gap-4 hover:border-cyan-500/50 transition">
+                    <div class="p-3 bg-cyan-500/20 text-cyan-400 rounded-xl shrink-0">
+                        <i data-lucide="activity" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base">Uso Práctico de Sensores</h3>
+                        <p class="text-sm text-slate-300 mt-1">Interpretar datos de entrada del <strong class="text-cyan-300">Sensor de Luz</strong> y del <strong class="text-cyan-300">Sensor de Ultrasonidos</strong> en el robot mBot2.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 bg-slate-800/60 border border-slate-700/80 rounded-2xl flex items-start gap-4 hover:border-emerald-500/50 transition">
+                    <div class="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl shrink-0">
+                        <i data-lucide="workflow" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base">Diagramas y Algoritmos</h3>
+                        <p class="text-sm text-slate-300 mt-1">Trazar diagramas de flujo normalizados y estructurar bloques lógicos visuales en la plataforma <strong class="text-emerald-300">mBlock</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="p-5 bg-slate-800/60 border border-slate-700/80 rounded-2xl flex items-start gap-4 hover:border-amber-500/50 transition">
+                    <div class="p-3 bg-amber-500/20 text-amber-400 rounded-xl shrink-0">
+                        <i data-lucide="video" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base">Creatividad y Comunicación</h3>
+                        <p class="text-sm text-slate-300 mt-1">Explicar razonamientos lógicos con claridad verbal y conceptual mediante ejemplos aplicados.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/90 border-l-4 border-amber-400 p-4 rounded-r-xl">
+                <p class="text-xs sm:text-sm text-slate-300">
+                    <strong class="text-amber-400">📌 Nota para el docente:</strong> Subraye a los alumnos que el concepto de condicional no es exclusivo de la programación; es el pilar de la lógica cotidiana y la automatización inteligente.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: Lectura Motivadora -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-5">
+            <div>
+                <div class="flex items-center gap-2 text-cyan-400 font-semibold text-xs uppercase tracking-wider mb-1">
+                    <i data-lucide="book-open-check" class="w-4 h-4"></i> Sección 2. Lectura Motivadora (Pág. 118)
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">El Sensor de Ultrasonidos y las Decisiones</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Diálogo entre Lucas, María, Maya, Zoe y Tomás en el laboratorio de robótica.</p>
+            </div>
+
+            <!-- Dialogue Visual Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700 flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 font-bold flex items-center justify-center shrink-0 text-white">L</div>
+                    <div>
+                        <span class="font-bold text-blue-400">Lucas:</span>
+                        <p class="text-slate-300 mt-0.5">"¡Chicos, hoy vamos a hacer que nuestro mBot2 tome decisiones por sí solo, usando condicionales Si-si no!"</p>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700 flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 font-bold flex items-center justify-center shrink-0 text-white">M</div>
+                    <div>
+                        <span class="font-bold text-purple-400">María:</span>
+                        <p class="text-slate-300 mt-0.5">"Primero, debemos repasar qué es un condicional Si-si no. ¿Quién quiere explicarlo?"</p>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700 flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 font-bold flex items-center justify-center shrink-0 text-white">M</div>
+                    <div>
+                        <span class="font-bold text-emerald-400">Maya:</span>
+                        <p class="text-slate-300 mt-0.5">"Es como tomar decisiones diarias. Ejemplo: <strong class="text-amber-300">Si hace sol</strong>, vamos al parque; <strong class="text-amber-300">si no</strong>, nos quedamos en casa."</p>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700 flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-pink-600 font-bold flex items-center justify-center shrink-0 text-white">Z</div>
+                    <div>
+                        <span class="font-bold text-pink-400">Zoe:</span>
+                        <p class="text-slate-300 mt-0.5">"Vamos a probarlo con el sensor de luz. Queremos que el mBot2 encienda su LED cuando esté oscuro y la apague con suficiente luz."</p>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700 flex items-start gap-3 md:col-span-2">
+                    <div class="w-8 h-8 rounded-full bg-amber-600 font-bold flex items-center justify-center shrink-0 text-white">T</div>
+                    <div>
+                        <span class="font-bold text-amber-400">Tomás:</span>
+                        <p class="text-slate-300 mt-0.5">"Primero, leemos el valor del sensor de luz. Luego, usamos el condicional Si-si no para decidir cuándo encender o apagar el LED."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Interactive Teaser Widget -->
+            <div class="p-4 bg-slate-950/70 border border-brand-500/30 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl">
+                        <i data-lucide="sun" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-100 text-sm">Prueba en vivo con los alumnos</h4>
+                        <p class="text-xs text-slate-400">Haga una pregunta rápida a la clase sobre otras situaciones de la vida real.</p>
+                    </div>
+                </div>
+                <div class="text-xs font-medium text-brand-300 bg-brand-900/60 border border-brand-700 px-3 py-1.5 rounded-lg whitespace-nowrap">
+                    Entrada → Evaluación → Acción
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: Trabajo en Cuaderno - Sección 1 -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-5">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i> Trabajo para el Cuaderno — Sección 1
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs rounded-full">
+                        Valor: 2 Puntos
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Saberes Previos y Comprensión Lectora</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Los estudiantes deben responder manuscrito en su cuaderno las siguientes 3 preguntas (Págs. 118 y 119):</p>
+            </div>
+
+            <div class="space-y-3.5">
+                <!-- Question 1 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700/80 rounded-2xl space-y-2">
+                    <div class="flex items-center gap-2 font-bold text-brand-400 text-sm sm:text-base">
+                        <span class="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center text-xs">1</span>
+                        <span>Aplicación Cotidiana:</span>
+                    </div>
+                    <p class="text-slate-200 text-xs sm:text-sm pl-8">
+                        ¿En qué situación de tu vida cotidiana utilizas un condicional Si-si no? Escribe <strong class="text-amber-300">dos ejemplos claros</strong> expresados con la estructura:
+                    </p>
+                    <div class="ml-8 p-2.5 bg-slate-900/80 rounded-xl font-mono text-xs text-amber-400 border border-slate-700">
+                        Si [Condición], entonces [Acción 1]; si no, [Acción 2].
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700/80 rounded-2xl space-y-2">
+                    <div class="flex items-center gap-2 font-bold text-cyan-400 text-sm sm:text-base">
+                        <span class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center text-xs">2</span>
+                        <span>Análisis de la Historia:</span>
+                    </div>
+                    <p class="text-slate-200 text-xs sm:text-sm pl-8">
+                        ¿Cuál fue la propuesta de Zoe y Tomás para programar el robot mBot2 usando el sensor de luz?
+                    </p>
+                    <p class="text-xs text-slate-400 italic pl-8">
+                        💡 Respuesta clave: Leer la luz ambiente; si es menor a 50, encender luces LED; si no, apagarlas.
+                    </p>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700/80 rounded-2xl space-y-2">
+                    <div class="flex items-center gap-2 font-bold text-purple-400 text-sm sm:text-base">
+                        <span class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">3</span>
+                        <span>Definición Técnica:</span>
+                    </div>
+                    <p class="text-slate-200 text-xs sm:text-sm pl-8">
+                        Con tus propias palabras, define qué es una <strong class="text-white">estructura condicional</strong> en programación y por qué es necesaria para que un robot sea autónomo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Mini Interactive Class Builder -->
+            <div class="p-3 bg-slate-900 border border-slate-700 rounded-xl flex items-center justify-between text-xs text-slate-300">
+                <span class="font-semibold text-amber-400 flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Criterio de Calificación:
+                </span>
+                <span>Respuestas manuscritas, completas y con ejemplos bien estructurados.</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: Diagramas de Flujo - Paso 1 y Paso 2 -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-4">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-brand-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="git-commit" class="w-4 h-4"></i> Trabajo para el Cuaderno — Sección 2 (4 Pts)
+                    </div>
+                    <span class="px-3 py-1 bg-brand-500/20 border border-brand-500/40 text-brand-300 font-bold text-xs rounded-full">
+                        Pasos 1 y 2
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Diagramación Lógica de Decisiones</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Copiar y dibujar en el cuaderno los dos diagramas de flujo clave (Págs. 119 - 120):</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Paso 1: Parque / Película -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i data-lucide="sun-medium" class="w-4 h-4"></i> Paso 1: Decisión Cotidiana (Pág. 119)
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Salir al parque según el clima.</p>
+                    </div>
+
+                    <!-- Flowchart Graphic 1 -->
+                    <div class="my-4 py-3 bg-slate-900/90 rounded-xl border border-slate-700/80 flex flex-col items-center space-y-2 text-xs">
+                        <div class="px-4 py-1 rounded-full bg-blue-600/30 border border-blue-400 text-blue-200 font-bold">
+                            Inicio
+                        </div>
+                        <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <div class="px-3 py-2 bg-amber-500/20 border border-amber-500/50 rounded-lg text-amber-300 font-semibold text-center">
+                            ¿Hace buen tiempo?
+                        </div>
+                        
+                        <div class="flex justify-between w-full px-6 pt-1 text-[11px]">
+                            <div class="flex flex-col items-center">
+                                <span class="text-emerald-400 font-bold">Sí ↓</span>
+                                <div class="px-2.5 py-1 mt-1 bg-emerald-950 border border-emerald-600 text-emerald-300 rounded text-center">
+                                    Ir a jugar al parque
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="text-rose-400 font-bold">No ↓</span>
+                                <div class="px-2.5 py-1 mt-1 bg-rose-950 border border-rose-600 text-rose-300 rounded text-center">
+                                    Ver una película en casa
+                                </div>
+                            </div>
+                        </div>
+
+                        <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-slate-500 mt-2"></i>
+                        <div class="px-4 py-1 rounded-full bg-blue-600/30 border border-blue-400 text-blue-200 font-bold">
+                            Fin
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-slate-400 text-center italic">Copia exacta requerida en cuaderno.</p>
+                </div>
+
+                <!-- Paso 2: Sensor de Luz mBot2 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-cyan-400 text-sm flex items-center gap-2">
+                            <i data-lucide="lightbulb" class="w-4 h-4"></i> Paso 2: Control Iluminación mBot2 (Pág. 120)
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Evaluación del umbral del sensor de luz.</p>
+                    </div>
+
+                    <!-- Flowchart Graphic 2 -->
+                    <div class="my-4 py-3 bg-slate-900/90 rounded-xl border border-slate-700/80 flex flex-col items-center space-y-2 text-xs">
+                        <div class="px-4 py-1 rounded-full bg-blue-600/30 border border-blue-400 text-blue-200 font-bold">
+                            Inicio
+                        </div>
+                        <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-slate-500"></i>
+                        <div class="px-3 py-2 bg-cyan-500/20 border border-cyan-500/50 rounded-lg text-cyan-300 font-semibold text-center">
+                            ¿Luz &lt; 50?
+                        </div>
+                        
+                        <div class="flex justify-between w-full px-6 pt-1 text-[11px]">
+                            <div class="flex flex-col items-center">
+                                <span class="text-emerald-400 font-bold">Sí ↓</span>
+                                <div class="px-2.5 py-1 mt-1 bg-emerald-950 border border-emerald-600 text-emerald-300 rounded text-center">
+                                    Encender luz LED
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="text-rose-400 font-bold">No ↓</span>
+                                <div class="px-2.5 py-1 mt-1 bg-rose-950 border border-rose-600 text-rose-300 rounded text-center">
+                                    Apagar luz LED
+                                </div>
+                            </div>
+                        </div>
+
+                        <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-slate-500 mt-2"></i>
+                        <div class="px-4 py-1 rounded-full bg-blue-600/30 border border-blue-400 text-blue-200 font-bold">
+                            Fin
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-slate-400 text-center italic">Representación formal en la robótica.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: mBlock y Simulación Interactiva -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-4">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="code" class="w-4 h-4"></i> Sección 2 — Paso 3 (Cuaderno)
+                    </div>
+                    <span class="px-3 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-full">
+                        Bloque Visual mBlock
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Estructura del Bloque en mBlock</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Transcripción en cuaderno y demostración interactiva con el sensor de luz:</p>
+            </div>
+
+            <!-- Interactive mBlock Simulation Split -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                
+                <!-- Visual Block Display -->
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-2xl space-y-3 font-sans">
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2">Bloque a transcribir al cuaderno:</p>
+                    
+                    <div class="bg-[#ffab19] text-white p-3 rounded-xl shadow-lg border-b-4 border-[#e69500] space-y-2 text-xs sm:text-sm font-bold">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <span>si</span>
+                            <div class="bg-[#5cb1d6] text-white px-2 py-0.5 rounded-full border border-[#4298be] text-[11px] font-semibold flex items-center gap-1">
+                                <span>(Intensidad de luz ambiente) &lt; 50</span>
+                            </div>
+                            <span>entonces</span>
+                        </div>
+
+                        <!-- Then Branch -->
+                        <div class="ml-4 pl-3 border-l-4 border-amber-300 py-1 space-y-1">
+                            <div class="bg-[#9966ff] text-white px-2.5 py-1 rounded border border-[#8047e6] text-xs font-medium">
+                                fijar LED todos encendido en [verde 🟢]
+                            </div>
+                        </div>
+
+                        <div>si no</div>
+
+                        <!-- Else Branch -->
+                        <div class="ml-4 pl-3 border-l-4 border-amber-300 py-1">
+                            <div class="bg-[#9966ff] text-white px-2.5 py-1 rounded border border-[#8047e6] text-xs font-medium">
+                                apagar LED todos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Simulator Widget -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-slate-200 text-sm flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i> Simulación en vivo (Probar con alumnos)
+                    </h3>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Intensidad de Luz Ambiente:</span>
+                            <span id="light-val-display" class="text-cyan-400 font-mono text-sm">35</span>
+                        </div>
+                        <input type="range" id="light-slider" min="0" max="100" value="35" oninput="updateLightSim(this.value)" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400">
+                        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                            <span>0 (Oscuro Total)</span>
+                            <span>50 (Umbral)</span>
+                            <span>100 (Mucha Luz)</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulated Robot State -->
+                    <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div id="robot-led-indicator" class="w-10 h-10 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)] border-2 border-emerald-300 transition-all duration-300 flex items-center justify-center">
+                                <i data-lucide="lightbulb" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400">Estado Luces LED mBot2:</div>
+                                <div id="robot-status-text" class="text-xs font-bold text-emerald-400">🟢 ENCENDIDAS (Verde)</div>
+                            </div>
+                        </div>
+                        <span id="condition-eval-badge" class="px-2 py-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-mono rounded border border-emerald-500/40">
+                            35 &lt; 50 → VERDADERO
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SLIDE 7: Ventajas y Desventajas del Condicional -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-4">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-purple-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="table" class="w-4 h-4"></i> Sección 2 — Paso 4 (Pág. 120)
+                    </div>
+                    <span class="px-3 py-1 bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs rounded-full">
+                        Cuadro Comparativo
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Análisis de Ventajas y Desventajas</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Elaborar en el cuaderno la tabla comparativa sobre la estructura <strong class="text-white">Si-si no</strong>:</p>
+            </div>
+
+            <!-- Stylized Comparative Table -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- Ventajas -->
+                <div class="p-5 bg-emerald-950/30 border border-emerald-500/40 rounded-2xl space-y-3">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold text-base border-b border-emerald-500/30 pb-2">
+                        <i data-lucide="thumbs-up" class="w-5 h-5"></i>
+                        <span>Ventajas</span>
+                    </div>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-slate-200">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">•</span>
+                            <span><strong>Simplicidad y claridad:</strong> Facilita la comprensión y el mantenimiento del código.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">•</span>
+                            <span><strong>Múltiples escenarios:</strong> Permite manejar distintas alternativas de forma estructurada.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">•</span>
+                            <span><strong>Programas adaptativos:</strong> Dota al robot de capacidad para reaccionar en tiempo real a su entorno.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Desventajas -->
+                <div class="p-5 bg-rose-950/30 border border-rose-500/40 rounded-2xl space-y-3">
+                    <div class="flex items-center gap-2 text-rose-400 font-bold text-base border-b border-rose-500/30 pb-2">
+                        <i data-lucide="thumbs-down" class="w-5 h-5"></i>
+                        <span>Desventajas / Riesgos</span>
+                    </div>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-slate-200">
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-400 font-bold">•</span>
+                            <span><strong>Anidamiento complejo:</strong> Si se usan demasiados condicionales anidados (uno dentro de otro), el código se vuelve confuso.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-400 font-bold">•</span>
+                            <span><strong>Dificultad de lectura:</strong> Aumenta la probabilidad de cometer errores lógicos o fallos invisibles.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="p-3.5 bg-slate-800/90 border border-slate-700 rounded-xl flex items-center gap-3">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 shrink-0"></i>
+                <p class="text-xs text-slate-300">
+                    <strong class="text-amber-400">Concepto clave para la clase:</strong> Enseñar el principio de simplicidad en programación. Menos condicionales anidados significan código más limpio y eficiente.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: Trabajo para el Libro - Página 121 -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-4">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-cyan-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="book-marked" class="w-4 h-4"></i> Trabajo para el Libro de Texto — Página 121
+                    </div>
+                    <span class="px-3 py-1 bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold text-xs rounded-full">
+                        Sección 3 (3 Pts)
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Aplico mis Conocimientos</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Resolución directa en la página 121 del libro de texto impreso:</p>
+            </div>
+
+            <!-- 3 Book Exercises Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                
+                <!-- Ex 1 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700 rounded-2xl flex flex-col justify-between space-y-2">
+                    <div>
+                        <div class="text-xs font-bold text-brand-400 uppercase">Actividad 1</div>
+                        <h3 class="font-bold text-slate-100 text-xs sm:text-sm mt-0.5">Explicación del Condicional</h3>
+                        <p class="text-[11px] text-slate-300 mt-2">
+                            ¿Qué es un condicional Si-si no y cuándo se usa?
+                        </p>
+                    </div>
+                    <div class="p-2.5 bg-slate-900 rounded-xl text-[11px] text-emerald-300 border border-slate-700">
+                        <strong>Respuesta esperada:</strong> Estructura de control que ejecuta una acción si la condición es verdadera y otra si es falsa.
+                    </div>
+                </div>
+
+                <!-- Ex 2 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700 rounded-2xl flex flex-col justify-between space-y-2">
+                    <div>
+                        <div class="text-xs font-bold text-amber-400 uppercase">Actividad 2</div>
+                        <h3 class="font-bold text-slate-100 text-xs sm:text-sm mt-0.5">Derecho a Voto (Código)</h3>
+                        <p class="text-[11px] text-slate-300 mt-2">
+                            Evaluar si una persona puede votar según su edad.
+                        </p>
+                    </div>
+                    <div class="p-2.5 bg-slate-900 rounded-xl text-[10px] font-mono text-amber-300 border border-slate-700 space-y-1">
+                        <div>Edad = [Ingresar Edad]</div>
+                        <div>Si: Edad &gt;= 18 entonces:</div>
+                        <div class="pl-2 text-emerald-400">Mostrar ("Puedes votar")</div>
+                        <div>si no:</div>
+                        <div class="pl-2 text-rose-400">Mostrar ("No puedes votar todavía")</div>
+                    </div>
+                </div>
+
+                <!-- Ex 3 -->
+                <div class="p-4 bg-slate-800/80 border border-slate-700 rounded-2xl flex flex-col justify-between space-y-2">
+                    <div>
+                        <div class="text-xs font-bold text-purple-400 uppercase">Actividad 3</div>
+                        <h3 class="font-bold text-slate-100 text-xs sm:text-sm mt-0.5">Evaluación Numérica</h3>
+                        <p class="text-[11px] text-slate-300 mt-2">
+                            Dibujar el diagrama de flujo para <code class="text-amber-300">Número = 10</code>.
+                        </p>
+                    </div>
+                    <div class="p-2 bg-slate-900 rounded-xl text-[10px] text-purple-300 border border-slate-700 font-mono text-center">
+                        ¿Número &gt; 0?<br/>
+                        Sí → "Positivo"<br/>
+                        No → "Negativo o Cero"
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Interactive Voting Test Mini Widget -->
+            <div class="p-3 bg-slate-950 border border-amber-500/30 rounded-xl flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="text-slate-300 font-medium">Probar lógica de voto:</span>
+                    <input type="number" id="age-input" value="18" oninput="testVoteLogic(this.value)" class="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-amber-300 font-mono text-center">
+                    <span class="text-slate-400">años</span>
+                </div>
+                <div id="vote-result-badge" class="px-3 py-1 bg-emerald-500/20 text-emerald-300 font-bold rounded-lg border border-emerald-500/40">
+                    🟢 "Puedes votar"
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: Reflexión y Firma del Padre/Tutor -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-4">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="heart-handshake" class="w-4 h-4"></i> Sección 4 y Constancia (1 Punto)
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs rounded-full">
+                        Integración + Firma
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Reflexión y Supervisión Familiar</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Pregunta de reflexión en cuaderno y constancia firmada por encargados:</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- Reflexión -->
+                <div class="p-5 bg-slate-800/80 border border-slate-700 rounded-2xl space-y-3">
+                    <div class="flex items-center gap-2 text-brand-400 font-bold text-base">
+                        <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                        <span>Pregunta de Reflexión (Cuaderno)</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        "¿De qué manera la capacidad de un robot para evaluar su entorno mediante sensores (luz, ultrasonidos) y tomar decisiones condicionales ayuda a resolver problemas reales en el mundo actual?"
+                    </p>
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700/80 text-xs text-slate-300 space-y-1">
+                        <span class="font-bold text-amber-400">Ejemplos para discutir en clase:</span>
+                        <ul class="list-disc pl-4 space-y-0.5 text-slate-400">
+                            <li>Autos autónomos evitando colisiones (Ultrasonidos).</li>
+                            <li>Sistemas de alumbrado público inteligente (Luz).</li>
+                            <li>Sistemas de seguridad e incendios.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Constancia Tutor -->
+                <div class="p-5 bg-slate-800/80 border border-slate-700 rounded-2xl space-y-3">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold text-base">
+                        <i data-lucide="file-check-2" class="w-5 h-5"></i>
+                        <span>Constancia de Supervisión</span>
+                    </div>
+                    <p class="text-xs text-slate-300">
+                        Debe estar completada y firmada por el padre, madre o tutor legal al reverso de la guía:
+                    </p>
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700/80 space-y-1.5 text-xs text-slate-300">
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                            <span>• Nombre del Estudiante</span>
+                            <span class="text-slate-500">1ro. Básico</span>
+                        </div>
+                        <div class="border-b border-slate-800 pb-1">• Nombre del Padre o Tutor</div>
+                        <div class="border-b border-slate-800 pb-1">• Firma del Padre o Tutor</div>
+                        <div>• Fecha de supervisión</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="p-3 bg-brand-950/40 border border-brand-500/30 rounded-xl text-xs text-brand-300 flex items-center gap-2">
+                <i data-lucide="check-square" class="w-4 h-4 shrink-0"></i>
+                <span>La firma del encargado garantiza que el trabajo del libro y cuaderno fue revisado en casa antes de la entrega.</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: Rúbrica Analítica y Cierre -->
+        <section class="slide flex-col justify-between w-full max-w-5xl mx-auto space-y-4">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase tracking-wider">
+                        <i data-lucide="clipboard-check" class="w-4 h-4"></i> Rúbrica Analítica de Evaluación
+                    </div>
+                    <span class="px-3 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs rounded-full">
+                        Total: 10 Puntos
+                    </span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Criterios de Calificación</h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Desglose oficial de la ponderación para la Guía No. 6:</p>
+            </div>
+
+            <!-- Rubric Table -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-700 bg-slate-800/80">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-900/90 text-slate-300 uppercase tracking-wider text-[11px] border-b border-slate-700">
+                        <tr>
+                            <th class="p-3">Criterio</th>
+                            <th class="p-3 text-emerald-400">Excelente</th>
+                            <th class="p-3 text-amber-400">Aceptable</th>
+                            <th class="p-3 text-rose-400">Deficiente</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/60 text-slate-300">
+                        <tr>
+                            <td class="p-3 font-bold text-white">Sección 1: Saberes Previos (Cuaderno)</td>
+                            <td class="p-3 text-emerald-300 font-medium">2 Pts: Responde con claridad y profundidad todas las preguntas.</td>
+                            <td class="p-3 text-amber-300">1 Pt: Incompletas o sin ejemplos.</td>
+                            <td class="p-3 text-rose-400">0 Pts: No resolvió.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-white">Sección 2: Lógica y Diagramación (Cuaderno)</td>
+                            <td class="p-3 text-emerald-300 font-medium">4 Pts: Dibuja 2 diagramas, transcribe mBlock y cuadro comparativo.</td>
+                            <td class="p-3 text-amber-300">2 Pts: Faltan diagramas o cuadro incompleto.</td>
+                            <td class="p-3 text-rose-400">0 Pts: No presentó.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-white">Sección 3: Aplico Conocimientos (Libro Pág. 121)</td>
+                            <td class="p-3 text-emerald-300 font-medium">3 Pts: Resuelve correctamente los 3 ejercicios del libro.</td>
+                            <td class="p-3 text-amber-300">2 Pts: Omite un ejercicio o con errores.</td>
+                            <td class="p-3 text-rose-400">0 Pts: Página en blanco.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-white">Sección 4: Reflexión y Firma (Cuaderno)</td>
+                            <td class="p-3 text-emerald-300 font-medium">1 Pt: Reflexión analítica + Firma de supervisión.</td>
+                            <td class="p-3 text-amber-300">1 Pt: Reflexión superficial.</td>
+                            <td class="p-3 text-rose-400">0 Pts: Sin reflexión ni firma.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Call to Action Footer -->
+            <div class="p-4 bg-gradient-to-r from-brand-900/60 to-purple-900/60 border border-brand-500/40 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+                <div>
+                    <h4 class="font-bold text-white text-sm">¡Listos para trabajar en clase y en casa!</h4>
+                    <p class="text-xs text-slate-300">Recuerden revisar letra clara y presentar el libro y cuaderno a tiempo.</p>
+                </div>
+                <button onclick="changeSlide(-9)" class="px-4 py-2 bg-brand-500 hover:bg-brand-400 text-white font-bold rounded-xl text-xs transition flex items-center gap-1.5 shrink-0">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>Volver al Inicio</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Speaker Notes Bottom Drawer (Hidden by default) -->
+    <div id="teacher-notes-drawer" class="hidden bg-amber-950/95 border-t-2 border-amber-500 text-amber-100 p-4 shrink-0 z-20 backdrop-blur-md">
+        <div class="max-w-5xl mx-auto flex items-start justify-between gap-4">
+            <div class="flex items-start gap-3">
+                <i data-lucide="graduation-cap" class="w-6 h-6 text-amber-400 shrink-0 mt-0.5"></i>
+                <div>
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-amber-300">Guía Didáctica para el Docente — Diapositiva Actual</h4>
+                    <p id="teacher-note-content" class="text-xs sm:text-sm text-amber-100 mt-1 leading-relaxed">
+                        Introduzca el tema preguntando a los estudiantes cómo toma decisiones un robot si no tiene cerebro humano. Conecte la idea con el concepto de condicionales.
+                    </p>
+                </div>
+            </div>
+            <button onclick="toggleTeacherNotes()" class="p-1 hover:bg-amber-900 rounded text-amber-300">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Toolbar -->
+    <footer class="bg-slate-800/90 border-t border-slate-700/80 px-4 py-3 flex items-center justify-between shrink-0 z-20">
+        <div class="text-xs text-slate-400 hidden sm:block">
+            Usa las flechas <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-slate-300 font-mono">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-slate-300 font-mono">→</kbd> para navegar
+        </div>
+
+        <div class="flex items-center space-x-3 mx-auto sm:mx-0">
+            <button id="prev-btn" onclick="changeSlide(-1)" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl text-xs transition flex items-center space-x-1.5 disabled:opacity-30">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Anterior</span>
+            </button>
+
+            <!-- Dots Indicator Container -->
+            <div id="dots-container" class="flex items-center space-x-1.5"></div>
+
+            <button id="next-btn" onclick="changeSlide(1)" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-xs transition flex items-center space-x-1.5 disabled:opacity-30">
+                <span>Siguiente</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Slide Overview Grid Modal (Hidden by default) -->
+    <div id="overview-modal" class="hidden fixed inset-0 bg-slate-950/90 z-50 backdrop-blur-md p-6 overflow-y-auto">
+        <div class="max-w-5xl mx-auto space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="layout-grid" class="w-6 h-6 text-brand-400"></i>
+                    <h3 class="text-xl font-bold text-white">Vista General de Diapositivas</h3>
+                </div>
+                <button onclick="toggleOverview()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Grid container dynamically populated -->
+            <div id="overview-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Notes for each slide
+        const teacherNotes = [
+            "Bienvenida a la clase. Indique la unidad (Unidad 7 del libro) y recuerde a los alumnos tener listos su cuaderno y libro de texto.",
+            "Enfatice que aprenderán lógica de condicionales y el uso real de sensores en el robot mBot2.",
+            "Pida voluntariamente a un estudiante que lea la frase de Maya y a otro la de Zoe para motivar la lectura compartida.",
+            "Explique la estructura 'Si [Condición], entonces [Acción 1]; si no, [Acción 2]'. Pida 2 ejemplos en vivo antes de que escriban en el cuaderno.",
+            "Muestre la diferencia entre la simbología de los diagramas de flujo: Óvalo (Inicio/Fin), Rombo (Decisión) y Rectángulo (Acción).",
+            "Mueva el deslizador de luz en pantalla para mostrar cómo cambia el estado de los LED verdes cuando el valor cae debajo de 50.",
+            "Pregunte a la clase: ¿Qué pasa si colocamos 10 condicionales uno dentro de otro? Discuta la confusión en el código.",
+            "Guíe la resolución de la página 121 del libro. Pruebe el número de edad para verificar quiénes entienden la lógica de votación.",
+            "Conecte la robótica con aplicaciones reales como los autos de Tesla o los postes de luz automáticos.",
+            "Repase la rúbrica de 10 puntos e insista en la firma del tutor legal para garantizar la revisión en casa."
+        ];
+
+        // Slide Titles for Overview
+        const slideTitles = [
+            "1. Portada",
+            "2. Objetivos",
+            "3. Lectura Contexto",
+            "4. Sección 1: Cuaderno",
+            "5. Sección 2: Diagramas",
+            "6. Sección 2: mBlock",
+            "7. Sección 2: Tabla",
+            "8. Sección 3: Libro (Pág 121)",
+            "9. Sección 4: Reflexión",
+            "10. Rúbrica Evaluativa"
+        ];
+
+        function initPresentation() {
+            document.getElementById('total-slides-num').textContent = totalSlides;
+            renderDots();
+            renderOverviewGrid();
+            showSlide(0);
+            
+            // Initialize Lucide Icons
+            lucide.createIcons();
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === index);
+            });
+
+            currentSlide = index;
+            document.getElementById('current-slide-num').textContent = currentSlide + 1;
+            
+            // Progress Bar
+            const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            // Update Teacher Note
+            document.getElementById('teacher-note-content').textContent = teacherNotes[currentSlide] || "Sin notas.";
+
+            // Update Dots
+            const dots = document.querySelectorAll('.dot-btn');
+            dots.forEach((dot, idx) => {
+                if (idx === currentSlide) {
+                    dot.className = "dot-btn w-6 h-2 bg-brand-500 rounded-full transition-all";
+                } else {
+                    dot.className = "dot-btn w-2 h-2 bg-slate-600 hover:bg-slate-400 rounded-full transition-all";
+                }
+            });
+
+            // Update Buttons Disabled State
+            document.getElementById('prev-btn').disabled = (currentSlide === 0);
+            document.getElementById('prev-btn-top').disabled = (currentSlide === 0);
+            document.getElementById('next-btn').disabled = (currentSlide === totalSlides - 1);
+            document.getElementById('next-btn-top').disabled = (currentSlide === totalSlides - 1);
+        }
+
+        function changeSlide(direction) {
+            let target = currentSlide + direction;
+            if (target >= 0 && target < totalSlides) {
+                showSlide(target);
+            }
+        }
+
+        function renderDots() {
+            const container = document.getElementById('dots-container');
+            container.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.onclick = () => showSlide(i);
+                dot.className = "dot-btn w-2 h-2 bg-slate-600 rounded-full transition-all";
+                dot.title = slideTitles[i];
+                container.appendChild(dot);
+            }
+        }
+
+        function renderOverviewGrid() {
+            const grid = document.getElementById('overview-grid');
+            grid.innerHTML = '';
+            slideTitles.forEach((title, idx) => {
+                const card = document.createElement('div');
+                card.onclick = () => {
+                    showSlide(idx);
+                    toggleOverview();
+                };
+                card.className = `p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between text-left h-28 ${
+                    idx === currentSlide 
+                    ? 'bg-brand-900/60 border-brand-500 text-white' 
+                    : 'bg-slate-800 border-slate-700 hover:border-slate-500 text-slate-300'
+                }`;
+                card.innerHTML = `
+                    <span class="text-xs font-bold text-brand-400">Diapositiva ${idx + 1}</span>
+                    <span class="text-xs font-semibold line-clamp-2">${title}</span>
+                    <div class="text-[10px] text-slate-500">Haz clic para ir</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Light Sensor Simulator Logic
+        function updateLightSim(val) {
+            document.getElementById('light-val-display').textContent = val;
+            const ledIndicator = document.getElementById('robot-led-indicator');
+            const statusText = document.getElementById('robot-status-text');
+            const badge = document.getElementById('condition-eval-badge');
+
+            if (parseInt(val) < 50) {
+                ledIndicator.className = "w-10 h-10 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)] border-2 border-emerald-300 transition-all duration-300 flex items-center justify-center";
+                statusText.className = "text-xs font-bold text-emerald-400";
+                statusText.textContent = "🟢 ENCENDIDAS (Verde)";
+                badge.className = "px-2 py-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-mono rounded border border-emerald-500/40";
+                badge.textContent = `${val} < 50 → VERDADERO`;
+            } else {
+                ledIndicator.className = "w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-600 transition-all duration-300 flex items-center justify-center opacity-40";
+                statusText.className = "text-xs font-bold text-slate-400";
+                statusText.textContent = "⚪ APAGADAS";
+                badge.className = "px-2 py-1 bg-rose-500/20 text-rose-300 text-[10px] font-mono rounded border border-rose-500/40";
+                badge.textContent = `${val} < 50 → FALSO`;
+            }
+        }
+
+        // Voting Age Logic
+        function testVoteLogic(ageVal) {
+            const age = parseInt(ageVal) || 0;
+            const badge = document.getElementById('vote-result-badge');
+            if (age >= 18) {
+                badge.className = "px-3 py-1 bg-emerald-500/20 text-emerald-300 font-bold rounded-lg border border-emerald-500/40";
+                badge.textContent = '🟢 "Puedes votar"';
+            } else {
+                badge.className = "px-3 py-1 bg-rose-500/20 text-rose-300 font-bold rounded-lg border border-rose-500/40";
+                badge.textContent = '🔴 "No puedes votar todavía"';
+            }
+        }
+
+        // UI Toggles
+        function toggleTeacherNotes() {
+            const drawer = document.getElementById('teacher-notes-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function toggleOverview() {
+            const modal = document.getElementById('overview-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key.toLowerCase() === 'm') {
+                toggleOverview();
+            } else if (e.key.toLowerCase() === 'n') {
+                toggleTeacherNotes();
+            } else if (e.key.toLowerCase() === 'f') {
+                toggleFullscreen();
+            }
+        });
+
+        // Initialize on Load
+        window.onload = initPresentation;
+    </script>
+</body>
+</html>
