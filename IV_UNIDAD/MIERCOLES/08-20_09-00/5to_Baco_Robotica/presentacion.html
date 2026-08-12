@@ -1,11 +1,617 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>5to. Baco - Robótica | III Unidad</title>
-<style>
-body{margin:0;background:#06162b;color:#eaf7ff;font-family:Arial;text-align:center}
-main{max-width:900px;margin:12vh auto;padding:40px;border:1px solid #1be7ff;border-radius:18px;background:#0a2340;box-shadow:0 0 30px #00d9ff33}
-h1{color:#ffe600} .btn{display:inline-block;margin-top:20px;padding:12px 20px;border-radius:10px;background:#ffe600;color:#06162b;text-decoration:none;font-weight:bold}
-</style></head><body><main><div style="font-size:52px">🤖</div>
-<h1>5to. Baco - Robótica</h1><h2>III Unidad · 2026</h2>
-<p>Plantilla de presentación. Reemplaza este archivo por la presentación HTML generada para la clase.</p>
-<a class="btn" href="../../../../../../index.html">← Volver al índice</a>
-</main></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: IA, PLN y Reconocimiento de Voz en Robótica (Bachillerato)</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 92vw;
+            max-width: 1050px;
+            height: 88vh;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            padding: 2.2rem;
+            border: 1px solid #334155;
+        }
+
+        .slide {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease-in-out;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            color: var(--accent);
+            margin: 0.8rem 0 0.4rem 0;
+            font-size: 1.15rem;
+        }
+
+        p, li {
+            font-size: 0.98rem;
+            line-height: 1.5;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .meta-info {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Tabs de Especialidades */
+        .tab-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #334155;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Componentes Interactivos */
+        .interactive-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .interactive-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .interactive-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-detail {
+            display: none;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #475569;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .card-detail.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .simulation-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 0.8rem;
+        }
+
+        .voice-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.03);
+            background-color: #dc2626;
+        }
+
+        .mbot-response {
+            margin-top: 0.8rem;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--accent);
+            min-height: 1.5rem;
+        }
+
+        .qa-block {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 0.7rem 1rem;
+            margin-bottom: 0.7rem;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+        }
+
+        .qa-block .question {
+            font-weight: bold;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .qa-block .answer {
+            display: none;
+            margin-top: 0.5rem;
+            font-size: 0.92rem;
+        }
+
+        .qa-block .answer.show {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #334155;
+        }
+
+        button.nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.nav-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button.nav-btn:disabled {
+            background-color: #475569;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .slide-counter {
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .tag {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .tag-purple {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--purple);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-container {
+                padding: 1.2rem;
+                height: 95vh;
+            }
+            h1 { font-size: 1.4rem; }
+            h2 { font-size: 1.2rem; }
+            .interactive-card-grid {
+                grid-template-columns: 1fr;
+            }
+            .tab-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <h1 style="margin-top: 1rem;">Inteligencia Artificial, PLN y Reconocimiento de Voz en Robótica</h1>
+            <p class="subtitle">Integración Técnica para Sistemas Robóticos (mBot2 / CyberPi)</p>
+            <div style="text-align: center; margin: 1.2rem 0;">
+                <p><strong>Unidad IV (Unidad 7 del Libro) — Robótica</strong></p>
+                <p>Grado: 4to. y 5to. Bachillerato en Ciencias y Letras (BACO, DISE, BIOLO)</p>
+            </div>
+            <div class="meta-info">
+                <p><strong>Colegio de Informática Justo Rufino Bautista</strong></p>
+                <p>Guía de Trabajo No. 6 (Págs. 110 - 115)</p>
+                <p style="color: var(--accent); margin-top: 0.5rem; font-size: 0.85rem;">💡 <em>Interactúa con las pestañas, tarjetas y simulaciones técnicas durante la clase.</em></p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 2: Aprendizajes Esperados -->
+        <div class="slide">
+            <h2>Aprendizajes Esperados</h2>
+            <ul>
+                <li>Categorizar los tres niveles de la Inteligencia Artificial (Débil, Fuerte y Superinteligencia) analizando sus implicaciones computacionales y operativas.</li>
+                <li>Evaluar la evolución técnica del procesamiento de audio, desde el sistema Audrey (1952) hasta el PLN en la nube con CyberPi.</li>
+                <li>Diseñar e integrar un proyecto de robótica asistida por IA adaptado al perfil profesional de cada especialidad (Computación, Diseño o Biología).</li>
+                <li>Resolver con rigor técnico las actividades de la página 115 del libro de texto.</li>
+                <li>Debatir con criterio sobre la privacidad de datos biométricos de voz, el tratamiento informático de audio y el sesgo en Machine Learning.</li>
+            </ul>
+        </div>
+
+        <!-- Diapositiva 3: Arquitectura del Sonido y Conversión ADC -->
+        <div class="slide">
+            <h2>El Código de la Voz: De la Señal Analógica al PLN</h2>
+            <p><strong>¿Cómo entiende un microcontrolador una orden hablada?</strong></p>
+
+            <div class="interactive-card-grid">
+                <div class="interactive-card" onclick="toggleCard('adc1')">
+                    <h4>1. Entrada Analógica <span class="tag">Onda Física</span></h4>
+                    <p>La voz humana genera vibraciones en el aire captadas por el micrófono de la placa CyberPi.</p>
+                    <div class="card-detail" id="adc1">
+                        El micrófono convierte la presión acústica en una señal eléctrica continua (voltaje analógico).
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('adc2')">
+                    <h4>2. Muestreo ADC <span class="tag">Digitalización</span></h4>
+                    <p>El ADC (Convertidor Analógico-Digital) transforma el voltaje en datos binarios (0s y 1s).</p>
+                    <div class="card-detail" id="adc2">
+                        Se mide la amplitud a una frecuencia específica (Hz) generando una matriz de datos digital o espectro.
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('adc3')">
+                    <h4>3. Transmisión & Cloud PLN <span class="tag">IA / Wi-Fi</span></h4>
+                    <p>Los paquetes de datos se envían por Wi-Fi a servidores para reconocimiento de patrones.</p>
+                    <div class="card-detail" id="adc3">
+                        Los algoritmos de Procesamiento de Lenguaje Natural (PLN) identifican las palabras y devuelven una orden ejecutable al mBot2.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulador de Procesamiento -->
+            <div class="simulation-box">
+                <h3>🎛️ Simulador: Enviar Comando de Voz a la Nube</h3>
+                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 0.5rem;">
+                    <button class="voice-btn" onclick="simulateVoice('mBot2, avanza!')">🗣️ "¡mBot2, avanza!"</button>
+                    <button class="voice-btn" style="background-color: var(--purple);" onclick="simulateVoice('mBot2, mide temperatura')">🗣️ "¡Mide temperatura!"</button>
+                    <button class="voice-btn" style="background-color: var(--warning);" onclick="simulateVoice('mBot2, despliega GUI')">🗣️ "¡Despliega pantalla!"</button>
+                </div>
+                <div class="mbot-response" id="mbotOutput">Esperando señal de audio analógica...</div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 4: Clasificación Avanzada de IA -->
+        <div class="slide">
+            <h2>Niveles e Implicaciones de la IA</h2>
+            <p style="font-size: 0.88rem;"><em>Haz clic en cada nivel para inspeccionar sus características técnicas e impacto industrial:</em></p>
+
+            <div class="interactive-card-grid">
+                <div class="interactive-card" onclick="toggleCard('ia1')">
+                    <h4>IA Débil (ANI) <span class="tag">Uso Actual</span></h4>
+                    <p>Dominio limitado a una sola tarea específica sin conciencia propia.</p>
+                    <div class="card-detail" id="ia1">
+                        <strong>Características Técnicas:</strong> Clasificadores de patrones, ausencia de transferencia de conocimiento.<br><br>
+                        <strong>Aplicación:</strong> Filtros anti-spam, reconocimiento facial en seguridad, asistentes de comandos rígidos.
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('ia2')">
+                    <h4>IA Fuerte (AGI) <span class="tag-purple">General</span></h4>
+                    <p>Razonamiento, aprendizaje y adaptación a nivel humano omnidominio.</p>
+                    <div class="card-detail" id="ia2">
+                        <strong>Características Técnicas:</strong> Razonamiento abstracto, autoadaptación contextual, transferencia de aprendizaje.<br><br>
+                        <strong>Aplicación:</strong> Agentes autónomos de decisión integral y diagnóstico robótico no supervisado.
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('ia3')">
+                    <h4>Superinteligencia (ASI) <span class="tag" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);">Hipotética</span></h4>
+                    <p>Capacidad cognitiva sintética que supera sustancialmente al genio humano.</p>
+                    <div class="card-detail" id="ia3">
+                        <strong>Características Técnicas:</strong> Automejora recursiva de código, síntesis científica autónoma.<br><br>
+                        <strong>Aplicación:</strong> Resolución de crisis globales y optimización de recursos a escala planetaria.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 5: Proyectos por Especialidad (BACO / DISE / BIOLO) -->
+        <div class="slide">
+            <h2>Proyectos de Robótica según Especialidad</h2>
+            <p style="font-size: 0.88rem; margin-bottom: 0.8rem;">Selecciona tu carrera para visualizar las especificaciones del proyecto de robótica asistido por IA:</p>
+
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('baco')">💻 Computación (BACO)</button>
+                <button class="tab-btn" onclick="switchTab('dise')">🎨 Diseño Gráfico (DISE)</button>
+                <button class="tab-btn" onclick="switchTab('biolo')">🧬 Ciencias Biológicas (BIOLO)</button>
+            </div>
+
+            <div class="tab-content active" id="tab-baco">
+                <h3 style="color: var(--primary);">Robot Agente con PLN y API en la Nube</h3>
+                <p><strong>Tecnología / Sensors:</strong> Conexión Wi-Fi / MQTT, API REST de Reconocimiento Vocal, Microcontrolador CyberPi.</p>
+                <p><strong>Aplicación Técnica:</strong> Recepción de voz, envío de matriz espectral a la nube, interpretación sintáctica y ejecución de scripts de control en el mBot2.</p>
+                <p><strong>Ejemplo práctico:</strong> Robot de inspección que analiza por código el estado de servidores físicos y ejecuta autorreparaciones por voz.</p>
+            </div>
+
+            <div class="tab-content" id="tab-dise">
+                <h3 style="color: var(--purple);">Interfaz VUI (Voice User Interface) y Control por Gestos</h3>
+                <p><strong>Tecnología / Sensors:</strong> Cámara con Visión Artificial, Pantalla IPS, Algoritmos de maquetación VUI/UX.</p>
+                <p><strong>Aplicación Técnica:</strong> Diseño de retroalimentación visual inmediata en pantalla al recibir órdenes de voz, optimizando la experiencia de usuario (UX).</p>
+                <p><strong>Ejemplo práctico:</strong> Robot guía de museo interactivo que despliega animaciones GUI/UI dinámicas e infografías vectoriales adaptativas.</p>
+            </div>
+
+            <div class="tab-content" id="tab-biolo">
+                <h3 style="color: var(--accent);">Robot Asistente Químico y Biosensor Biométrico</h3>
+                <p><strong>Tecnología / Sensors:</strong> Sensores de gases/temperatura, síntesis de voz, clasificación por aprendizaje automático (Machine Learning).</p>
+                <p><strong>Aplicación Técnica:</strong> Monitoreo ambiental en laboratorio y emisión de alertas vocales ante cambios críticos de parámetros fisicoquímicos.</p>
+                <p><strong>Ejemplo práctico:</strong> Robot móvil para análisis de clorofila y detección temprana de plagas, comunicando verbalmente el diagnóstico biológico.</p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 6: Libro Pág. 115 (Solucionario) -->
+        <div class="slide">
+            <h2>Evaluación del Libro (Página 115) — Solucionario</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">Haz clic en cada sección para desplegar las respuestas fundamentadas del libro:</p>
+
+            <div class="qa-block" onclick="toggleQA('qa1')">
+                <div class="question">1. Definición Formal de Inteligencia Artificial <span>▼</span></div>
+                <div class="answer" id="qa1">Rama de las ciencias de la computación que diseña algoritmos y modelos matemáticos capaces de realizar tareas cognitivas (aprendizaje adaptativo, percepción visual, toma de decisiones y comprensión sintáctica del lenguaje).</div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa2')">
+                <div class="question">2. Origen del Término (1956) <span>▼</span></div>
+                <div class="answer" id="qa2">La Conferencia de Dartmouth (Dartmouth Summer Research Project on Artificial Intelligence), celebrada en Dartmouth College (Hanover, New Hampshire) en el verano de 1956.</div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa3')">
+                <div class="question">3. Clasificación Técnica: ANI, AGI y ASI <span>▼</span></div>
+                <div class="answer" id="qa3">
+                    • <strong>IA Débil (ANI):</strong> Sistema experto en un solo dominio o tarea sin flexibilidad fuera de su programación.<br>
+                    • <strong>IA Fuerte (AGI):</strong> Sistema sintético con capacidad de entender, aprender y aplicar conocimiento de forma autónoma en cualquier área.<br>
+                    • <strong>Superinteligencia (ASI):</strong> Concepto hipotético donde la IA supera en velocidad, creatividad y juicio a toda la humanidad combinada.
+                </div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa4')">
+                <div class="question">4. Científicos Clave de Dartmouth 1956 <span>▼</span></div>
+                <div class="answer" id="qa4">
+                    • <strong>John McCarthy:</strong> Formuló el término "IA" y creó el lenguaje LISP.<br>
+                    • <strong>Marvin Minsky:</strong> Cofundador del laboratorio de IA del MIT y pionero en redes neuronales y robótica perceptiva.<br>
+                    • <strong>Claude Shannon:</strong> Fundador de la Teoría de la Información y esquemas para programación de juegos.<br>
+                    • <strong>Alan Newell y Herbert Simon:</strong> Creadores de Logic Theorist, el primer programa funcional para demostración automática de teoremas.
+                </div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 7: Ética Algorítmica y Privacidad -->
+        <div class="slide">
+            <h2>Reflexión y Ética Algorítmica</h2>
+            <div class="qa-block" style="border-left-color: var(--warning); cursor: default;">
+                <p><strong>Desafío Ético:</strong> Almacenar millones de grabaciones de voz en la nube genera riesgos de privacidad, datos biométricos vulnerables, sesgos algorítmicos y ciberseguridad.</p>
+            </div>
+
+            <div style="margin-top: 0.8rem;">
+                <h3>🛡️ Estándares Profesionales según tu Área:</h3>
+                <ul>
+                    <li><strong>Computación (BACO):</strong> Implementar arquitecturas <em>Edge Computing</em> para procesar la voz de forma local en CyberPi, reduciendo la exposición de datos biométricos en servidores centralizados.</li>
+                    <li><strong>Diseño Gráfico (DISE):</strong> Crear interfaces VUI transparentes que indiquen de forma clara mediante alertas de UI cuando el micrófono está grabando datos.</li>
+                    <li><strong>Ciencias Biológicas (BIOLO):</strong> Garantizar el uso ético y el consentimiento informado al analizar datos biométricos o fisiológicos mediante voz en entornos de laboratorio.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>Anterior</button>
+            <span class="slide-counter" id="slideCounter">Diapositiva 1 de 7</span>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideCounter = document.getElementById('slideCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            slideCounter.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlide();
+        }
+
+        // Mostrar / Ocultar Tarjetas Interactivas
+        function toggleCard(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('show');
+            }
+        }
+
+        // Mostrar / Ocultar Respuestas Q&A
+        function toggleQA(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('show');
+            }
+        }
+
+        // Cambio de Pestañas de Especialidades
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Simulación de Conversión ADC y PLN Cloud
+        function simulateVoice(command) {
+            const output = document.getElementById('mbotOutput');
+            output.style.color = '#f59e0b';
+            output.textContent = `⚡ [ADC]: Muestreando señal analógica -> Generando trama binaria...`;
+
+            setTimeout(() => {
+                output.style.color = '#8b5cf6';
+                output.textContent = `☁️ [Wi-Fi/Cloud PLN]: Procesando patrones de frecuencia para "${command}"...`;
+            }, 800);
+
+            setTimeout(() => {
+                output.style.color = '#10b981';
+                if (command.includes('avanza')) {
+                    output.textContent = '🤖 mBot2 (CyberPi): Script ejecutado -> "Motores activados a 100 RPM" 🚀';
+                } else if (command.includes('temperatura')) {
+                    output.textContent = '🤖 mBot2 (CyberPi): Lectura biométrica -> "Temperatura ambiental: 24.5°C" 🌡️';
+                } else if (command.includes('GUI')) {
+                    output.textContent = '🤖 mBot2 (CyberPi): VUI UX -> "Desplegando gráfico vectorial en pantalla IPS" 🎨';
+                }
+            }, 1800);
+        }
+
+        // Navegación mediante teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < slides.length - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>

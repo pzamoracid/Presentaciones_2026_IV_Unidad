@@ -1,11 +1,545 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-<title>3ro. Robótica | III Unidad</title>
-<style>
-body{margin:0;background:#06162b;color:#eaf7ff;font-family:Arial;text-align:center}
-main{max-width:900px;margin:12vh auto;padding:40px;border:1px solid #1be7ff;border-radius:18px;background:#0a2340;box-shadow:0 0 30px #00d9ff33}
-h1{color:#ffe600} .btn{display:inline-block;margin-top:20px;padding:12px 20px;border-radius:10px;background:#ffe600;color:#06162b;text-decoration:none;font-weight:bold}
-</style></head><body><main><div style="font-size:52px">🤖</div>
-<h1>3ro. Robótica</h1><h2>III Unidad · 2026</h2>
-<p>Plantilla de presentación. Reemplaza este archivo por la presentación HTML generada para la clase.</p>
-<a class="btn" href="../../../../../../index.html">← Volver al índice</a>
-</main></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Interactiva: IA y Robótica Educativa (3ro Básico)</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 92vw;
+            max-width: 1050px;
+            height: 88vh;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            padding: 2.2rem;
+            border: 1px solid #334155;
+        }
+
+        .slide {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease-in-out;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2.1rem;
+            margin-bottom: 0.8rem;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            color: var(--accent);
+            margin: 0.8rem 0 0.4rem 0;
+            font-size: 1.15rem;
+        }
+
+        p, li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-info {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        /* Componentes Interactivos */
+        .interactive-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .interactive-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .interactive-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-detail {
+            display: none;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px stroke #475569;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .card-detail.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .simulation-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .voice-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.05);
+            background-color: #dc2626;
+        }
+
+        .mbot-response {
+            margin-top: 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent);
+            min-height: 1.5rem;
+        }
+
+        .qa-block {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 0.7rem 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+        }
+
+        .qa-block .question {
+            font-weight: bold;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .qa-block .answer {
+            display: none;
+            margin-top: 0.5rem;
+        }
+
+        .qa-block .answer.show {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.2rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #334155;
+        }
+
+        button.nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.nav-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button.nav-btn:disabled {
+            background-color: #475569;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .slide-counter {
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .tag {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-container {
+                padding: 1.2rem;
+                height: 95vh;
+            }
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .interactive-card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <h1 style="margin-top: 1.5rem;">La Inteligencia Artificial y la Robótica Educativa</h1>
+            <p class="subtitle">Reconocimiento de Voz en mBot2 y Ejemplos de la Vida Cotidiana</p>
+            <div style="text-align: center; margin: 1.5rem 0;">
+                <p><strong>Unidad IV (Unidad 7 del Libro) — Robótica</strong></p>
+                <p>Grado: Tercero Básico</p>
+            </div>
+            <div class="meta-info">
+                <p><strong>Colegio de Informática Justo Rufino Bautista</strong></p>
+                <p>Guía de Trabajo No. 6 (Págs. 110 - 115)</p>
+                <p style="color: var(--accent); margin-top: 0.5rem; font-size: 0.85rem;">💡 <em>Haz clic en las tarjetas, botones y preguntas para interactuar durante la clase.</em></p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 2: Aprendizajes Esperados -->
+        <div class="slide">
+            <h2>Aprendizajes Esperados</h2>
+            <ul>
+                <li>Comprender los conceptos fundamentales de la IA y distinguir sus niveles (Débil, Fuerte y Superinteligencia).</li>
+                <li>Conocer la evolución histórica del reconocimiento de voz, desde el sistema Audrey (1952) hasta la Conferencia de Dartmouth (1956).</li>
+                <li>Analizar cómo la IA se conecta con el entorno mediante el robot mBot2, la placa CyberPi y la red Wi-Fi.</li>
+                <li>Identificar ejemplos prácticos de la IA en la vida diaria (algoritmos, asistentes, automatización).</li>
+                <li>Reflexionar sobre las implicaciones éticas y de privacidad al manejar datos de voz.</li>
+            </ul>
+        </div>
+
+        <!-- Diapositiva 3: Historia + Simulador Interactivo -->
+        <div class="slide">
+            <h2>El Código de la Voz: De 1952 al mBot2</h2>
+            <p><strong>Sistema Audrey (1952):</strong> Creado en los Laboratorios Bell, reconocía únicamente los dígitos del 0 al 9 hablados por su creador.</p>
+            <p><strong>mBot2 + CyberPi (Actualidad):</strong> Gracias al Wi-Fi y Procesamiento de Lenguaje Natural (PLN), procesa voz humana en tiempo real.</p>
+
+            <div class="simulation-box">
+                <h3>🎮 Simulación Interactiva: Prueba enviar una orden a mBot2</h3>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">Haz clic en un comando para probar el reconocimiento de voz en la placa CyberPi:</p>
+                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="voice-btn" onclick="simulateVoice('¡mBot2, avanza!')">🗣️ "¡mBot2, avanza!"</button>
+                    <button class="voice-btn" style="background-color: var(--primary);" onclick="simulateVoice('¡mBot2, gira a la derecha!')">🗣️ "¡Gira a la derecha!"</button>
+                    <button class="voice-btn" style="background-color: var(--warning);" onclick="simulateVoice('¡mBot2, detente!')">🗣️ "¡Detente!"</button>
+                </div>
+                <div class="mbot-response" id="mbotOutput">Esperando comando de voz...</div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 4: Tipos de IA e Interacción Cotidiana -->
+        <div class="slide">
+            <h2>Clasificación de la IA y la Vida Cotidiana</h2>
+            <p style="font-size: 0.9rem;"><em>Haz clic en cada tarjeta para descubrir sus ejemplos reales:</em></p>
+
+            <div class="interactive-card-grid">
+                <div class="interactive-card" onclick="toggleCard('card1')">
+                    <h4>IA Débil (Estrecha) <span class="tag">Uso Actual</span></h4>
+                    <p>Diseñada para hacer una tarea específica sin consciencia general.</p>
+                    <div class="card-detail" id="card1">
+                        <strong>📌 Ejemplos Cotidianos:</strong>
+                        <ul>
+                            <li><strong>Spotify / YouTube:</strong> Recomendación personalizada de canciones y videos.</li>
+                            <li><strong>TikTok / Instagram:</strong> Algoritmo de feed basado en tus gustos.</li>
+                            <li><strong>Filtro Anti-Spam:</strong> Filtra correos basura en Gmail automáticamente.</li>
+                            <li><strong>Reconocimiento Facial:</strong> Desbloqueo del teléfono celular.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('card2')">
+                    <h4>IA Fuerte (General) <span class="tag">En Desarrollo</span></h4>
+                    <p>Capaz de aprender, razonar y adaptarse a múltiples contextos como un humano.</p>
+                    <div class="card-detail" id="card2">
+                        <strong>📌 Ejemplos Cotidianos / Futuros:</strong>
+                        <ul>
+                            <li><strong>Vehículos Autónomos Integrales:</strong> Autos que conducen solos evaluando cualquier imprevisto en la ciudad.</li>
+                            <li><strong>Asistentes Médicos de Diagnóstico:</strong> Analizan síntomas, historial y contexto global del paciente en tiempo real.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('card3')">
+                    <h4>Superinteligencia <span class="tag">Teórico</span></h4>
+                    <p>Modelo teórico que supera la inteligencia humana en todos los campos.</p>
+                    <div class="card-detail" id="card3">
+                        <strong>📌 Ejemplos Teóricos:</strong>
+                        <ul>
+                            <li>Sistemas globales capaces de resolver el cambio climático de forma autónoma.</li>
+                            <li>Agentes automejorativos que descubren nuevas medicinas sin intervención humana.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 5: Proyectos de Robótica e IA -->
+        <div class="slide">
+            <h2>Proyectos de Robótica con IA en el Mundo Real</h2>
+            <p style="font-size: 0.9rem;"><em>Haz clic en cada proyecto para ver cómo funciona en el mundo real:</em></p>
+
+            <div class="interactive-card-grid">
+                <div class="interactive-card" onclick="toggleCard('proj1')">
+                    <h4>⚽ Robots Deportivos (Fútbol)</h4>
+                    <p>Usa sensores de visión, motores de precisión y comunicación en red.</p>
+                    <div class="card-detail" id="proj1">
+                        <strong>En la Vida Real:</strong> Torneos de RoboCup donde robots autónomos planean pases y coordinan estrategias para anotar goles sin control remoto.
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('proj2')">
+                    <h4>🌱 Riego Automático Inteligente</h4>
+                    <p>Sensores de humedad + microcontrolador.</p>
+                    <div class="card-detail" id="proj2">
+                        <strong>En la Vida Real:</strong> Invernaderos automatizados que monitorean la tierra y activan las bombas solo cuando la planta realmente necesita agua, ahorrando recursos.
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('proj3')">
+                    <h4>🗣️ Asistentes de Voz Robóticos</h4>
+                    <p>Procesamiento de Lenguaje Natural (PLN) + Wi-Fi.</p>
+                    <div class="card-detail" id="proj3">
+                        <strong>En la Vida Real:</strong> Dispositivos como Alexa, Google Home o robots de asistencia en hoteles que interpretan órdenes para apagar luces o dar información.
+                    </div>
+                </div>
+
+                <div class="interactive-card" onclick="toggleCard('proj4')">
+                    <h4>🦾 Control por Gestos</h4>
+                    <p>Cámaras inteligentes y visión artificial.</p>
+                    <div class="card-detail" id="proj4">
+                        <strong>En la Vida Real:</strong> Brazos robóticos en cirugías médicas o fábricas que imitan en tiempo real la mano del operador.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 6: Respuestas Pág. 115 del Libro -->
+        <div class="slide">
+            <h2>Respuestas Libro (Página 115) — ¡Comprueba tus respuestas!</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem;">Haz clic en cada pregunta para mostrar la respuesta del libro:</p>
+
+            <div class="qa-block" onclick="toggleQA('qa1')">
+                <div class="question">1. ¿Qué es la Inteligencia Artificial? <span>▼</span></div>
+                <div class="answer" id="qa1">Rama de la informática dedicada al desarrollo de sistemas y máquinas capaces de realizar tareas que requieren inteligencia humana (aprendizaje, comprensión del lenguaje, reconocimiento de patrones y toma de decisiones).</div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa2')">
+                <div class="question">2. ¿Conferencia donde nació el término "IA"? <span>▼</span></div>
+                <div class="answer" id="qa2">La Conferencia de Dartmouth (Dartmouth Summer Research Project on Artificial Intelligence), celebrada en el verano de 1956.</div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa3')">
+                <div class="question">3. Explicación de los 3 tipos de IA: <span>▼</span></div>
+                <div class="answer" id="qa3">
+                    • <strong>IA Débil:</strong> Especializada en una sola tarea sin razonar fuera de ella.<br>
+                    • <strong>IA Fuerte:</strong> Capaz de aprender, razonar y adaptarse a múltiples contextos.<br>
+                    • <strong>Superinteligencia:</strong> Modelo teórico que supera la inteligencia humana en todos los ámbitos.
+                </div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa4')">
+                <div class="question">4. Científicos relevantes de Dartmouth (1956): <span>▼</span></div>
+                <div class="answer" id="qa4">
+                    • <strong>John McCarthy:</strong> Acuñó el término "IA" y creó LISP.<br>
+                    • <strong>Marvin Minsky:</strong> Pionero en redes neuronales e IA en robótica.<br>
+                    • <strong>Claude Shannon:</strong> Padre de la teoría de la información.<br>
+                    • <strong>Alan Newell y Herbert Simon:</strong> Creadores del Logic Theorist.
+                </div>
+            </div>
+
+            <div class="qa-block" onclick="toggleQA('qa5')">
+                <div class="question">5. Proyecto Práctico: Robot de Reciclaje Inteligente <span>▼</span></div>
+                <div class="answer" id="qa5">Se instala una cámara con visión artificial en mBot2. Mediante Machine Learning, el robot identifica si un residuo es plástico, papel o metal y activa un servomotor para moverlo al contenedor correcto.</div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 7: Debate Ético -->
+        <div class="slide">
+            <h2>Reflexión y Debate Ético en Clase</h2>
+            <div class="qa-block" style="border-left-color: var(--warning); cursor: default;">
+                <p><strong>Pregunta de Análisis:</strong> Dado que la IA usa grandes volúmenes de datos de voz y personales, ¿qué medidas éticas deben tomar los programadores para proteger a los usuarios?</p>
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <h3>🛡️ Buenas Prácticas Éticas en Robótica:</h3>
+                <ul>
+                    <li><strong>Procesamiento Local (Edge AI):</strong> Procesar comandos en la propia placa (CyberPi) sin enviar el audio a servidores externos.</li>
+                    <li><strong>Transparencia:</strong> Encender una luz LED indicadora cuando el micrófono esté escuchando activamente.</li>
+                    <li><strong>Encriptación y Borrado:</strong> Proteger las grabaciones y permitir al usuario borrar su historial en cualquier momento.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Controles de navegación -->
+        <div class="controls">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>Anterior</button>
+            <span class="slide-counter" id="slideCounter">Diapositiva 1 de 7</span>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideCounter = document.getElementById('slideCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            slideCounter.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlide();
+        }
+
+        // Mostrar / Ocultar Tarjetas Interactivas
+        function toggleCard(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('show');
+            }
+        }
+
+        // Mostrar / Ocultar Respuestas Q&A
+        function toggleQA(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('show');
+            }
+        }
+
+        // Simulación de Comandos de Voz mBot2
+        function simulateVoice(command) {
+            const output = document.getElementById('mbotOutput');
+            output.style.color = '#f59e0b';
+            output.textContent = `🎙️ Procesando audio: "${command}"...`;
+
+            setTimeout(() => {
+                output.style.color = '#10b981';
+                if (command.includes('avanza')) {
+                    output.textContent = '🤖 mBot2 dice: "¡Entendido! Encendiendo motores hacia adelante 🚀"';
+                } else if (command.includes('gira')) {
+                    output.textContent = '🤖 mBot2 dice: "¡Entendido! Girando 90° a la derecha 🔄"';
+                } else if (command.includes('detente')) {
+                    output.textContent = '🤖 mBot2 dice: "¡Entendido! Deteniendo todos los motores 🛑"';
+                }
+            }, 1000);
+        }
+
+        // Navegación mediante teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < slides.length - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>
